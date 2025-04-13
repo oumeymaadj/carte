@@ -17,6 +17,9 @@ typedef struct{
     Card discard[50]; //tab avec les cartes défaussées
 }Player;
 
+int* deck(int d[150]);
+int* shuffle(int d[150], int shuffled[150]);
+Player build_player(int nomb_cards, int *deck, int *start);
 
 
 
