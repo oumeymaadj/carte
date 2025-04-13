@@ -11,8 +11,8 @@ typedef struct{
 }Card;
 
 typedef struct{
-    char name[]; //essayer de faire un tab dynamique
-    Card cards[]; //tab dynamique pour savoir cbm de cartes on met dedans
+    char *name; //essayer de faire un tab dynamique
+    Card *cards; //tab dynamique pour savoir cbm de cartes on met dedans
     int nb_cards; //nombre de cartes
     Card discard[50]; //tab avec les cartes défaussées
 }Player;

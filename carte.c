@@ -51,19 +51,40 @@ int* shuffle(int d[150], int shuffled[150]){// shuffled tableaux vide qui seras 
     return shuffled; 
 }
 
-Player build_player(Player p, int nb_cards,int *){
+
+
+Player build_player(int nomb_cards, int *deck,int *start){ //deck: le paquet de cartes , start: pointeur qui contient l'indice d'ou on commence a prendre les cartes en gros on a un paquet de cartes et on distribut les cartes dans l'ordre, ex: le premier a les cartes de 1 a 15 le deuxieme de 15 a 30 du coup start c'est le pointeur de l'indice du debut
+    Player p;
+    int j =0; // indice du paquet du joueurs;
     char n[100000];
     printf("type your name (50 charcaters max) :\n");
     scanf("%s",n);
-    while(strlen(n)<51){
+    while(strlen(n) > 50 ){
         printf("You exceeded the max characters allowed, type again :\n");
         scanf("%s",n);
     }
-    p.name = malloc(sizeof(char)*strlen(n));
+    p.name = malloc(sizeof(char)*strlen(n) +1 );// +1 pour /0
     if(p.name == NULL){
         printf("No dynamic space found available"); //on quitte le programme
         exit(1);
     }
+    strcpy(p.name, n);
+    printf("Welcome, %s!\n", p.name);
+    p.nb_cards = nomb_cards;
+    p.cards = malloc(sizeof(Card)*p.nb_cards);
+    if (p.cards == NULL) {
+        printf("Memory allocation failed for cards.\n");
+        exit(2);
+    }
+    for(int i=0; i<p.nb_cards; i++){
+        p.cards[i].seeable = 0; // mettre toute les cartes invisible
+    }
+    for(int i= *start; i<p.nb_cards+ *start;i++){
+        p.cards[j].value = deck[i]; // distribution des cartes 
+        j++;
+    }
+    *start += p.nb_cards; // avancement du premier indice pour le prochain joueur
+    return p;
     
 }
 
