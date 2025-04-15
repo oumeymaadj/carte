@@ -76,19 +76,28 @@ Player build_player(int nomb_cards, int *deck,int *start){ //deck: le paquet de 
         printf("Memory allocation failed for cards.\n");
         exit(2);
     }
-    for(int i=0; i<p.nb_cards; i++){
-        p.cards[i].seeable = 0; // mettre toute les cartes invisible
-    }
     for(int i= *start; i<p.nb_cards+ *start;i++){
         p.cards[j].value = deck[i]; // distribution des cartes 
+        p.cards[j].seeable = 0; // mettre toute les cartes invisible
         j++;
+
     }
     *start += p.nb_cards; // avancement du premier indice pour le prochain joueur
     return p;
     
 }
 
+void display_card(Player p, int end){ // affuiche un paquet de carte d'un joueur
+    for(int i= 0;i< end ;i++){
+        if(p.cards[i].seeable == 1){
+            printf("%d \n",p.cards[i].value);
+        }
+        else{
+            printf("??? \n");
+        }
 
+    }
+}
 
 int main(){
     
