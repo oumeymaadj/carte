@@ -32,7 +32,6 @@ int* shuffle(int d[150], int shuffled[150]){// shuffled tableaux vide qui seras 
     int nb; //indice aléatoire qu'on va prendre du tab d
     int j=0;
     int takenindeces[150] ={0}; //tab avec indices deja pris du tableau d
-    shuffled[149]=15;
     while(j<150){
         k=1;
         do{
@@ -65,7 +64,7 @@ Player build_player(int nomb_cards, int *deck,int *start){ //deck: le paquet de 
     }
     p.name = malloc(sizeof(char)*strlen(n) +1 );// +1 pour /0
     if(p.name == NULL){
-        printf("No dynamic space found available"); //on quitte le programme
+        printf("No dynamic space found available \n"); //on quitte le programme
         exit(1);
     }
     strcpy(p.name, n);
@@ -87,7 +86,8 @@ Player build_player(int nomb_cards, int *deck,int *start){ //deck: le paquet de 
     
 }
 
-void display_card(Player p, int end){ // affuiche un paquet de carte d'un joueur
+void display_card(Player p, int end){ // affuiche un paquet de carte d'un joueur 
+    printf("Player Card Display: %s \n", p.name);
     for(int i= 0;i< end ;i++){
         if(p.cards[i].seeable == 1){
             printf("%d \n",p.cards[i].value);
@@ -95,7 +95,16 @@ void display_card(Player p, int end){ // affuiche un paquet de carte d'un joueur
         else{
             printf("??? \n");
         }
+    }
+}
 
+void display_discard(Player p){ // affiche la defausse du joueurs   
+    printf("Player Discard Display: %s \n", p.name);
+    if(p.discard.seeable == 1){
+        printf("%d \n",p.discard.value);
+    }
+    else{
+        printf("??? \n");
     }
 }
 
