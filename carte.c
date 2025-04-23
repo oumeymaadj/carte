@@ -1,9 +1,5 @@
 #include"carte.h"
 
-int scanfbutbetter(){
-    ///recuperer dans un td jsp lequel
-}
-
 int* deck(int d[150]){// cree un paquet de cartes avec les conditions ATTENTION ils sont dans l'odre
     int c= 0;
     for(int i=0;i<5;i++){
@@ -108,6 +104,3 @@ void display_discard(Player p){ // affiche la defausse du joueurs
     }
 }
 
-int main(){
-    
-}
