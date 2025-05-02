@@ -14,6 +14,8 @@ int nb_players(){ // fonction pour le nombre de joueur
 int nb_cards(int play){// fonctions pour le nombre de cartes par joueurs, play est le nombre de joueurs
     int a;
     printf("Enter the number of cards for each player between 2 and 8 \n");
+    printf("8 players : between 8-6 \n 7 players : \n 6 players : \n 5 players : \n 4 players : \n 3 players : \n 2 players : ");
+
     scanf("%d",&a);
     while(play == 8 && (a>8 || a<6)){
         printf("The number of cards does not respect the interval Enter a number between 6 and 8 \n");
