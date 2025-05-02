@@ -11,7 +11,7 @@ int nb_players(){ // fonction pour le nombre de joueur
     return a;
 }
 
-int nb_cards(int play){// fonctions pour le nombre de cartes pas joueurs, play est le nombre de joueurs
+int nb_cards(int play){// fonctions pour le nombre de cartes par joueurs, play est le nombre de joueurs
     int a;
     printf("Enter the number of cards for each player between 2 and 8 \n");
     scanf("%d",&a);
@@ -48,7 +48,7 @@ int nb_cards(int play){// fonctions pour le nombre de cartes pas joueurs, play e
 
 
 
-Party build_players(int *pickaxe_size){ // initialise une party. pickaxe_size: taille de la pioche initaliser a 0.
+Party build_players(int *pile_size){ // initialise une party. pile_size: taille de la pioche initaliser a 0.
     Party p; // une partie 
     int nomb_cards;//nb cartes
     int start = 0;
@@ -80,32 +80,32 @@ Party build_players(int *pickaxe_size){ // initialise une party. pickaxe_size: t
         printf("No dynamic space found available \n"); //on quitte le programme
         exit(1);
     }
-    p.pickaxe = malloc(sizeof(Card) * 150); // 150 parce que  deck a 150 cartes
-    if (p.pickaxe == NULL) {
-        printf("Memory allocation failed for pickaxe.\n");
+    p.pile = malloc(sizeof(Card) * 150); // 150 parce que  deck a 150 cartes
+    if (p.pile == NULL) {
+        printf("Memory allocation failed for pile.\n");
         exit(1);
     }
     for(int i =0; i<p.nb_players; i++){
         p.players[i] = build_player(nomb_cards, deck_,&start);
     }
 
-    p.size_pickaxe = 150 - (p.nb_players * nomb_cards);
+    p.size_pile = 150 - (p.nb_players * nomb_cards);
     
     for(int i= start; i<150;i++){
-        p.pickaxe[*pickaxe_size].value = deck_[i]; // distribution des cartes 
-        p.pickaxe[*pickaxe_size].seeable = 0; // tout cachée
-        (*pickaxe_size) ++;
+        p.pile[*pile_size].value = deck_[i]; // distribution des cartes 
+        p.pile[*pile_size].seeable = 0; // tout cachée
+        (*pile_size) ++;
     }
     return p;
 
 }
 
-void draw_pile_display(Party p, int * pickaxe_size ){ // affichage de la pioche
+void draw_pile_display(Party p, int * pile_size ){ // affichage de la pioche
     printf("hide the display of the draw pile \n");
-    printf("%d \n", p.pickaxe[*pickaxe_size - 1].value);
+    printf("%d \n", p.pile[*pile_size - 1].value);
 }
 
-void display_party(Party p , int *pickaxe_size, int i ){ // que la party commence! i -> c'est l'indice du joueur, turn_index -> l'indice du tour pour la pioche
+void display_party(Party p , int *pile_size, int i ){ // que la party commence! i -> c'est l'indice du joueur, turn_index -> l'indice du tour pour la pioche
     int choice1; // choix1 entre piocher ou prendre de la defausse 
     int choice2; // choix2 -> choix entre echanger une carte avec l'une de ses cartes ou refuser et la deposer dans la defausse 
     int choice3; // choix3 -> choix de la defausse de la personne 
@@ -122,8 +122,8 @@ void display_party(Party p , int *pickaxe_size, int i ){ // que la party commenc
         scanf("%d",&choice1);
     }
     if(choice1 == 1){// si il a choisit de piocher une carte
-        draw_pile_display(p,pickaxe_size);
-        (*pickaxe_size)--; // j'avance dans la pioche
+        draw_pile_display(p,pile_size);
+        (*pile_size)--; // j'avance dans la pioche
         printf("Now enter 1 if you want to exchange your card with one of your cards, or enter 2 if you refuse the card and want to place it in your discard pile. \n");
         scanf("%d",&choice2);
         while(choice2 != 1 && choice2!=2){ 
@@ -131,8 +131,8 @@ void display_party(Party p , int *pickaxe_size, int i ){ // que la party commenc
             scanf("%d",&choice2);
         }
         if(choice2 == 2){ // si il refuse la carte et veut la mettre dans la defausse 
-            p.players[i].discard.value = p.pickaxe[*pickaxe_size].value; // i le joueurs pas encore inialiser a faire !!
-            p.pickaxe[*pickaxe_size].seeable = 1;
+            p.players[i].discard.value = p.pile[*pile_size].value; // i le joueurs pas encore inialiser a faire !!
+            p.pile[*pile_size].seeable = 1;
         }
         else if(choice2 == 1){// si c'est le choix 1 c'est a dire si il veut l'echanger avec l'une de ses cartes perso
           printf("Enter the index of the card you want to exchange.\n ");
@@ -142,7 +142,7 @@ void display_party(Party p , int *pickaxe_size, int i ){ // que la party commenc
             scanf("%d",&choice4);
           }
           var = p.players[i].cards[choice4].value ; // variable intermediaire
-          p.players[i].cards[choice4].value = p.pickaxe[*pickaxe_size].value; // echangerles cartes, la cartes de la pioche a la place de la carte perso 
+          p.players[i].cards[choice4].value = p.pile[*pile_size].value; // echangerles cartes, la cartes de la pioche a la place de la carte perso 
           p.players[i].cards[choice4].seeable = 1;
           p.players[i].discard.value = var;
           p.players[i].discard.seeable = 1;
@@ -176,7 +176,7 @@ void free_party(Party p){
     }
     free(p.players); // Libérer le tableau de joueurs
     // Libérer la pioche
-    free(p.pickaxe);
+    free(p.pile);
 }
 
 
