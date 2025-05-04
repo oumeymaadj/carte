@@ -179,4 +179,68 @@ void free_party(Party p){
     free(p.pile);
 }
 
+int endgame(Party p){ // qui detecte la fin de la partie elle renvoie l'indice du joueur qui a finis la partie sinon elle renvoie 100
+    int cpt;
+    cpt =0;
+    for(int i=0; i< p.nb_players; i++){
+        for(int j=0; j<p.players[i].nb_cards;i++){
+            if(p.players[i].cards[j].seeable == 1){
+                cpt ++;
+            }
+            if(cpt == p.players[i].nb_cards){
+                printf("%s has all his cards visible one more turn and the game is over ", p.players[i].name);
+                return i;
+            }          
+        }
+        cpt = 0;
+    }
+    return 100;
+}
+
+void scores(Party p) { // Affiche le(s) joueur(s) avec le meilleur score
+    int max = 1000000;          // score minimum flemme de changer la variable 
+    int i_max = 0;              // index d’un des gagnants
+    int tab[10] = {0};          // indices des gagnants (si égalité) au pire des cas 8 joeurs sont egaux mais j'ai mis 10 au cas ou
+    int indice = 0;             // compteur du tableau
+
+    for (int i = 0; i < p.nb_players; i++) {
+        p.players[i].score = 0;
+        for (int j = 0; j < p.players[i].nb_cards; j++) {
+            if (p.players[i].cards[j].seeable == 1) {
+                p.players[i].score += p.players[i].cards[j].value;
+            }
+        }
+
+        if (p.players[i].score < max) {
+            max = p.players[i].score;
+            i_max =i;
+            indice =0;
+            tab[indice] = i;
+            indice ++;
+        } 
+        else if(p.players[i].score == max){
+            tab[indice] = i;
+            indice ++;
+        }
+    }
+
+    // Affichage des gagnants
+    if (indice == 1) {
+        printf("\n The winner is: %s with %d points!\n", p.players[i_max].name, max);
+    } 
+    else {
+        printf("\n It's a tie between: ");
+        for (int i = 0; i < indice; i++) {
+            printf("%s \n", p.players[tab[i]].name);
+        }
+        printf("\nAll with a score of: %d points\n", max);
+    }
+
+    // Affichage de tous les scores
+    printf("\n Final scores:\n");
+    for (int i = 0; i < p.nb_players; i++) {
+        printf("%s : %d points\n", p.players[i].name, p.players[i].score);
+    }
+}
+
 

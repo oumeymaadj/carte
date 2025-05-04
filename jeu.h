@@ -13,3 +13,5 @@ Party build_players(int *pile_size);
 void draw_pile_display(Party p, int * pile_size );
 void display_party(Party p , int *pile_size, int i );
 void free_party(Party p);
+int endgame(Party p);
+void scores(Party p);

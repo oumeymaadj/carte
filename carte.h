@@ -15,11 +15,14 @@ typedef struct{
     Card *cards; //tab dynamique pour savoir cbm de cartes on met dedans
     int nb_cards; //nombre de cartes
     Card discard; //tab avec les cartes défaussées
+    int score; // score
 }Player;
 
 int* deck(int d[150]);
 int* shuffle(int d[150], int shuffled[150]);
 Player build_player(int nomb_cards, int *deck, int *start);
+void display_card(Player p, int end);
+void display_discard(Player p);
 
 
 
