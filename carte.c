@@ -52,12 +52,12 @@ Player build_player(int nomb_cards, int *deck,int *start){ //deck: le paquet de 
     Player p;
     int j =0; // indice du paquet du joueurs;
     char n[100000];
-    printf("Type your name (50 characters max):\n");
-    while (scanf("%s", n) != 1 || strlen(n) > 50) {
-        printf("Invalid input or name too long. Try again:\n");
-        while (getchar() != '\n');
+    printf("type your name (50 charcaters max) :\n");
+    scanf("%s",n);
+    while(strlen(n) > 50 ){
+        printf("You exceeded the max characters allowed, type again :\n");
+        scanf("%s",n);
     }
-    while (getchar() != '\n');
     p.name = malloc(sizeof(char)*strlen(n) +1 );// +1 pour /0
     if(p.name == NULL){
         printf("No dynamic space found available \n"); //on quitte le programme
