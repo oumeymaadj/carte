@@ -106,7 +106,7 @@ void draw_pile_display(Party p, int * pile_size ){ // affichage de la pioche
 }
 
 void display_party(Party p , int *pile_size, int i ){ // que la party commence! i -> c'est l'indice du joueur, turn_index -> l'indice du tour pour la pioche
-    int choice1; // choix1 entre piocher ou prendre de la defausse 
+    int choice1; // choix1 entre piocher ou prendre de la defausse  
     int choice2; // choix2 -> choix entre echanger une carte avec l'une de ses cartes ou refuser et la deposer dans la defausse 
     int choice3; // choix3 -> choix de la defausse de la personne 
     int choice4; // choix4 = i l'indice de la carte du joueur qu'il veut echanger 
@@ -131,7 +131,7 @@ void display_party(Party p , int *pile_size, int i ){ // que la party commence! 
             scanf("%d",&choice2);
         }
         if(choice2 == 2){ // si il refuse la carte et veut la mettre dans la defausse 
-            p.players[i].discard.value = p.pile[*pile_size].value; // i le joueurs pas encore inialiser a faire !!
+            p.players[i].discard.value = p.pile[*pile_size].value; // i le joueur
             p.pile[*pile_size].seeable = 1;
         }
         else if(choice2 == 1){// si c'est le choix 1 c'est a dire si il veut l'echanger avec l'une de ses cartes perso
