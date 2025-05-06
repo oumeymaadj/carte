@@ -2,22 +2,19 @@
 
 int nb_players(){ // fonction pour le nombre de joueur
     int a;
-    printf("Enter the number of players in the game between 2 and 8 \n");
-    scanf("%d",&a);
-    while(a>8 || a<2 ){
-        printf("start over you entered the wrong number \n");
-        scanf("%d",&a);
-    }
+    do{
+        a=scanint("enter a number bewtween 2 and 8 \n");
+    }while(a>8 || a<2 );
     return a;
 }
 
 int nb_cards(int play){// fonctions pour le nombre de cartes par joueurs, play est le nombre de joueurs
     int a;
     printf("Enter the number of cards for each player between 2 and 8 \n");
-    scanf("%d",&a);
+    a=scanint("Nombre de cartes : ");
     while(play == 8 && (a>8 || a<6)){
         printf("The number of cards does not respect the interval Enter a number between 6 and 8 \n");
-        scanf("%d",&a);
+        a=scanint("Nombre de cartes : ");
     }
     while(play == 7 && (a>9 || a<6)){
         printf("The number of cards does not respect the interval Enter a number between 6 and 9 \n");
@@ -43,6 +40,7 @@ int nb_cards(int play){// fonctions pour le nombre de cartes par joueurs, play e
         printf("The number of cards does not respect the interval Enter a number between 6 and 25 \n");
         scanf("%d",&a);
     }
+    printf("Vous jouez avec %d cartes \n", a);
     return a;
 }
 
@@ -68,34 +66,40 @@ Party build_players(int *pile_size){ // initialise une party. pile_size: taille 
     }
 
     p.nb_players = nb_players(); // nombre de joueurs
+ 
     nomb_cards = nb_cards(p.nb_players); // nombre de cartes
 
     //melange les cartes
     deck(d);
-    deck_ = shuffle(d,deck_); // paquet de cartes melangé
-
+   
+    shuffle(d,deck_); // paquet de cartes melangé
+  
     // cree les joueurs
     p.players = malloc(sizeof(Player)* p.nb_players);
     if(p.players == NULL){
         printf("No dynamic space found available \n"); //on quitte le programme
         exit(1);
     }
+ 
     p.pile = malloc(sizeof(Card) * 150); // 150 parce que  deck a 150 cartes
+
     if (p.pile == NULL) {
         printf("Memory allocation failed for pile.\n");
         exit(1);
     }
+
     for(int i =0; i<p.nb_players; i++){
         p.players[i] = build_player(nomb_cards, deck_,&start);
     }
 
     p.size_pile = 150 - (p.nb_players * nomb_cards);
-    
+
     for(int i= start; i<150;i++){
         p.pile[*pile_size].value = deck_[i]; // distribution des cartes 
         p.pile[*pile_size].seeable = 0; // tout cachée
         (*pile_size) ++;
     }
+
     return p;
 
 }
@@ -183,16 +187,16 @@ int endgame(Party p){ // qui detecte la fin de la partie elle renvoie l'indice d
     int cpt;
     cpt =0;
     for(int i=0; i< p.nb_players; i++){
+        cpt =0;
         for(int j=0; j<p.players[i].nb_cards;i++){
             if(p.players[i].cards[j].seeable == 1){
                 cpt ++;
-            }
-            if(cpt == p.players[i].nb_cards){
-                printf("%s has all his cards visible one more turn and the game is over ", p.players[i].name);
-                return i;
             }          
         }
-        cpt = 0;
+        if(cpt == p.players[i].nb_cards){
+            printf("%s has all his cards visible one more turn and the game is over ", p.players[i].name);
+            return i;
+        }
     }
     return 100;
 }

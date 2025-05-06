@@ -1,5 +1,26 @@
 #include"carte.h"
 
+int scanint(char *message) {
+    int var;
+    char buffer[100];
+    char *endptr;
+
+    while (1) {
+        printf("%s", message);
+        if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
+            continue; // Problème de lecture
+        }
+
+        var = strtol(buffer, &endptr, 10); // Convertit l’entrée en entier
+
+        // Vérifie que la conversion a réussi et qu'il n'y a pas de caractères restants
+        if (endptr != buffer && *endptr == '\n') {
+            return var;
+        }
+        printf("Invalid input. Please enter a valid number.\n");
+    }
+}
+
 int* deck(int d[150]){// cree un paquet de cartes avec les conditions ATTENTION ils sont dans l'odre
     int c= 0;
     for(int i=0;i<5;i++){
@@ -23,27 +44,20 @@ int* deck(int d[150]){// cree un paquet de cartes avec les conditions ATTENTION 
     return d;
 }
 
-int* shuffle(int d[150], int shuffled[150]){// shuffled tableaux vide qui seras retourner avec le paquet de cartes melangee
-    int k =1; //booleens qui permet de verifier si l'indice a deja ete pris(1 si il n'est pas dedans 0 sinon)
-    int nb; //indice aléatoire qu'on va prendre du tab d
-    int j=0;
-    int takenindeces[150] ={0}; //tab avec indices deja pris du tableau d
-    while(j<150){
-        k=1;
-        do{
-            nb = rand()%150;
-            for(int i=0;i<j;i++){
-                if(nb == takenindeces[i]){
-                    k=0;
-                    break;
-                }
-            }
-        }while(k==0);
-        takenindeces[j]=nb;
-        shuffled[j]=d[nb];
-        j++;
+void shuffle(int d[150], int shuffled[150]) {
+    // Copier le tableau d'origine dans shuffled
+    for (int i = 0; i < 150; i++) {
+        shuffled[i] = d[i];
     }
-    return shuffled; 
+
+    // Algorithme de Fisher-Yates pour mélanger le tableau
+    for (int i = 149; i > 0; i--) {
+        int j = rand() % (i + 1); // indice aléatoire entre 0 et i inclus
+        // Échange des valeurs
+        int temp = shuffled[i];
+        shuffled[i] = shuffled[j];
+        shuffled[j] = temp;
+    }
 }
 
 
@@ -51,7 +65,7 @@ int* shuffle(int d[150], int shuffled[150]){// shuffled tableaux vide qui seras 
 Player build_player(int nomb_cards, int *deck,int *start){ //deck: le paquet de cartes , start: pointeur qui contient l'indice d'ou on commence a prendre les cartes en gros on a un paquet de cartes et on distribut les cartes dans l'ordre, ex: le premier a les cartes de 1 a 15 le deuxieme de 15 a 30 du coup start c'est le pointeur de l'indice du debut
     Player p;
     int j =0; // indice du paquet du joueurs;
-    char n[100000];
+    char n[1000];
     printf("type your name (50 charcaters max) :\n");
     scanf("%s",n);
     while(strlen(n) > 50 ){
