@@ -18,8 +18,11 @@ typedef struct{
     int score; // score
 }Player;
 
+
+int better_scan_int(const char *message);
+void better_scan_str(const char *message, char *buffer, int buffer_size);
 int* deck(int d[150]);
-int* shuffle(int d[150], int shuffled[150]);
+void shuffle(int* d);
 Player build_player(int nomb_cards, int *deck, int *start);
 void display_card(Player p, int end);
 void display_discard(Player p);
