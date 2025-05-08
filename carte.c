@@ -1,7 +1,12 @@
 #include"carte.h"
-
 #include <stdio.h>
 #include <stdlib.h>
+
+#define RESET   "\033[0m"
+#define BLUE    "\033[34m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define RED     "\033[31m"
 
 int* deck(int d[150]) {
     int compteur = 0;
@@ -151,10 +156,21 @@ void display_card(Player p, int end) { // affiche joliment un paquet de cartes d
 
     // Ligne 3 : Valeur
     for (int i = 0; i < end; i++) {
-        if (p.cards[i].seeable == 1)
-            printf(" |  %3d  |  ", p.cards[i].value);
-        else
-            printf(" |  ??   |  ");
+        if (p.cards[i].seeable == 1) {
+    int val = p.cards[i].value;
+    const char *color;
+
+    if (val >= -5 && val <= 0)
+        color = BLUE;
+    else if (val >= 1 && val <= 4)
+        color = GREEN;
+    else if (val >= 5 && val <= 9)
+        color = YELLOW;
+    else
+        color = RED;
+
+    printf(" | %s%3d%s  |  ", color, val, RESET);
+}
     }
     printf("\n");
 
@@ -194,9 +210,18 @@ void display_discard(Player p) { // affiche la défausse du joueur joliment
 
     // Ligne 3 : Valeur visible ou cachée
     if (p.discard.seeable == 1) {
-        printf("   |  %3d  |   \n", p.discard.value);
-    } else {
-        printf("   |  ??   |   \n");
+       int val = p.discard.value;
+       const char *color;
+       if (val >= -5 && val <= 0)
+    color = BLUE;
+      else if (val >= 1 && val <= 4)
+    color = GREEN;
+else if (val >= 5 && val <= 9)
+    color = YELLOW;
+else
+    color = RED;
+
+printf("   | %s%3d%s  |   \n", color, val, RESET);
     }
 
     // Ligne 4 : Vide
