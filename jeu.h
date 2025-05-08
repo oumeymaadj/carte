@@ -8,7 +8,7 @@ typedef struct{
 }Party;
 
 int nb_players();
-int nb_cards(int play);
+int nombre_cards();
 Party build_players(int *pile_size);
 void draw_pile_display(Party p, int * pile_size );
 void display_party(Party *p , int *pile_size, int i );

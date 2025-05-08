@@ -10,36 +10,12 @@ int nb_players(){ // fonction pour le nombre de joueur
     return a;
 }
 
-int nb_cards(int play) { // fonction pour le nombre de cartes par joueur
+int nombre_cards() { // fonction pour le nombre de cartes par joueur
     int a;
-    a = better_scan_int("Enter the number of cards for each player between 2 and 8 \n");
-
-    while (play == 8 && (a > 8 || a < 6)) {
-        a = better_scan_int("The number of cards does not respect the interval. Enter a number between 6 and 8 \n");
-    }
-    while (play == 7 && (a > 9 || a < 6)) {
-        a = better_scan_int("The number of cards does not respect the interval. Enter a number between 6 and 9 \n");
-    }
-    while (play == 6 && (a > 10 || a < 6)) {
-        a = better_scan_int("The number of cards does not respect the interval. Enter a number between 6 and 10 \n");
-    }
-    while (play == 5 && (a > 12 || a < 6)) {
-        a = better_scan_int("The number of cards does not respect the interval. Enter a number between 6 and 12 \n");
-    }
-    while (play == 4 && (a > 15 || a < 6)) {
-        a = better_scan_int("The number of cards does not respect the interval. Enter a number between 6 and 15 \n");
-    }
-    while (play == 3 && (a > 20 || a < 6)) {
-        a = better_scan_int("The number of cards does not respect the interval. Enter a number between 6 and 20 \n");
-    }
-    while (play == 2 && (a > 25 || a < 6)) {
-        a = better_scan_int("The number of cards does not respect the interval. Enter a number between 6 and 25 \n");
-    }
-
+    a = (rand()%5) + 6; // carte entre 6 et 10
+    printf("il y aura %d cartes par joueurs", a);
     return a;
 }
-
-
 
 
 Party build_players(int *pile_size){ // initialise une party. pile_size: taille de la pioche initaliser a 0.
@@ -55,7 +31,7 @@ Party build_players(int *pile_size){ // initialise une party. pile_size: taille 
     }
     
     p.nb_players = nb_players(); // nombre de joueurs
-    nomb_cards = nb_cards(p.nb_players); // nombre de cartes
+    nomb_cards = nombre_cards(); // nombre de cartes
 
     //melange les cartes
     deck(d);
@@ -87,7 +63,7 @@ Party build_players(int *pile_size){ // initialise une party. pile_size: taille 
 
 }
 
-void draw_pile_display(Party p, int * pile_size ){ // affichage de la pioche
+/*void draw_pile_display(Party p, int * pile_size ){ // affichage de la pioche
     if (*pile_size <= 0) {
         printf("Draw pile is empty!\n");
     }
@@ -95,7 +71,33 @@ void draw_pile_display(Party p, int * pile_size ){ // affichage de la pioche
         printf("Draw pile: [%d] (%d cards remaining)\n", p.pile[*pile_size - 1].value, *pile_size);
     }
     
+}*/
+
+void draw_pile_display(Party p, int *pile_size) { // affichage de la pioche joliment
+    if (*pile_size <= 0) {
+        printf("🃏 Draw pile is empty!\n\n");
+    } else {
+        printf("🃏 Draw Pile (top card):\n\n");
+
+        // Haut de la carte
+        printf("    _______    \n");
+
+        // Valeur visible de la carte du dessus
+        printf("   |  %3d  |   \n", p.pile[*pile_size - 1].value);
+
+        // Ligne graphique vide
+        printf("   |       |   \n");
+
+        // Bas de la carte
+        printf("   |_______|   \n");
+
+        // Nombre de cartes restantes
+        printf("  (%d cards remaining)\n\n", *pile_size);
+    }
 }
+
+
+
 
 void display_party(Party *p , int *pile_size, int i ){ // que la party commence! i -> c'est l'indice du joueur, turn_index -> l'indice du tour pour la pioche
     int choice1; // choix1 entre piocher ou prendre de la defausse  

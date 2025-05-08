@@ -1,24 +1,28 @@
 #include"carte.h"
 
-int* deck(int d[150]){// cree un paquet de cartes avec les conditions ATTENTION ils sont dans l'odre
-    int c= 0;
-    for(int i=0;i<5;i++){
-        *(d+c)= -2;
-        c++;
-    }
-    for(int i=5;i<15;i++){
-        *(d+c)= -1;
-        c++;
-    }
-    for(int i=15;i<30;i++){
-        *(d+c)= 0;
-        c++;
-    }
-    for(int i=1;i<=12;i++){
-        for(int j=1;j<=10;j++){
-            *(d+c)= i;
-            c++;
+int* deck(int d[150]){// cree un paquet de cartes avec les conidition de variantes nous avons ajoutez un nombre de cartes de 150 imposer
+    int compteur= 0;
+    int valeur;
+    int quantite;
+    printf("Creation du paquet de cartes personnaliser avec 150 cartes imposer \n");
+    while(compteur != 150){
+        // demande la valeur
+        valeur = better_scan_int("Entrez la valeur que vous voulez entre -5 et 15 \n");
+        while(valeur<-5 || valeur>15){
+            printf("Vous n'avez pas respecter l'intervalle \n");
+            valeur = better_scan_int("Entrez la valeur que vous voulez entre -5 et 15\n");
         }
+        // demande la quantite
+        quantite =  better_scan_int("Entrez la quantite que vous voulez pour cette valeur \n");
+        while(quantite +compteur > 150 || quantite < 1 || quantite > 15){
+            printf("Erreur de saisie respectant les normes \n");
+            quantite = better_scan_int("Entrez la quantite que vous voulez pour cette valeur en respectant la limite max et l'intervalle -5 et 15 !!! \n");          
+        }
+        for(int j =0; j< quantite; j++){
+            d[compteur]= valeur;
+            compteur++;
+        }
+
     }
     return d;
 }
@@ -68,7 +72,7 @@ Player build_player(int nomb_cards, int *deck,int *start){ //deck: le paquet de 
     
 }
 
-void display_card(Player p, int end){ // affuiche un paquet de carte d'un joueur 
+/*void display_card(Player p, int end){ // affuiche un paquet de carte d'un joueur 
     printf("Player Card Display: %s \n", p.name);
     for(int i= 0;i< end ;i++){
         if(p.cards[i].seeable == 1){
@@ -79,9 +83,48 @@ void display_card(Player p, int end){ // affuiche un paquet de carte d'un joueur
         }
     }
     printf("\n\n");
+}*/
+void display_card(Player p, int end) { // affiche joliment un paquet de cartes d’un joueur
+    printf("🧑 Player Card Display: %s\n\n", p.name);
+
+    // Ligne 1 : Indices
+    for (int i = 0; i < end; i++) {
+        printf("   (%2d)     ", i);
+    }
+    printf("\n");
+
+    // Ligne 2 : Haut des cartes
+    for (int i = 0; i < end; i++) {
+        printf("  _______   ");
+    }
+    printf("\n");
+
+    // Ligne 3 : Valeur
+    for (int i = 0; i < end; i++) {
+        if (p.cards[i].seeable == 1)
+            printf(" |  %3d  |  ", p.cards[i].value);
+        else
+            printf(" |  ??   |  ");
+    }
+    printf("\n");
+
+    // Ligne 4 : Visuel vide
+    for (int i = 0; i < end; i++) {
+        printf(" |       |  ");
+    }
+    printf("\n");
+
+    // Ligne 5 : Bas des cartes
+    for (int i = 0; i < end; i++) {
+        printf(" |_______|  ");
+    }
+    printf("\n\n");
 }
 
-void display_discard(Player p){ // affiche la defausse du joueurs   
+
+
+
+/*void display_discard(Player p){ // affiche la defausse du joueurs   
     printf("Player Discard Display: %s \n", p.name);
     if(p.discard.seeable == 1){
         printf("Discard: [%d] \n",p.discard.value);
@@ -89,5 +132,29 @@ void display_discard(Player p){ // affiche la defausse du joueurs
     else{
         printf("Discard: [??] \n");
     }
+}*/
+void display_discard(Player p) { // affiche la défausse du joueur joliment
+    printf("🗑️  Player Discard Display: %s\n\n", p.name);
+
+    // Ligne 1 : Titre centré
+    printf("     Discard     \n");
+
+    // Ligne 2 : Haut de la carte
+    printf("    _______    \n");
+
+    // Ligne 3 : Valeur visible ou cachée
+    if (p.discard.seeable == 1) {
+        printf("   |  %3d  |   \n", p.discard.value);
+    } else {
+        printf("   |  ??   |   \n");
+    }
+
+    // Ligne 4 : Vide
+    printf("   |       |   \n");
+
+    // Ligne 5 : Bas
+    printf("   |_______|   \n\n");
 }
+
+
 
