@@ -1,31 +1,81 @@
 #include"carte.h"
 
-int* deck(int d[150]){// cree un paquet de cartes avec les conidition de variantes nous avons ajoutez un nombre de cartes de 150 imposer
-    int compteur= 0;
+#include <stdio.h>
+#include <stdlib.h>
+
+int* deck(int d[150]) {
+    int compteur = 0;
     int valeur;
     int quantite;
-    printf("Creation du paquet de cartes personnaliser avec 150 cartes imposer \n");
-    while(compteur != 150){
-        // demande la valeur
-        valeur = better_scan_int("Entrez la valeur que vous voulez entre -5 et 15 \n");
-        while(valeur<-5 || valeur>15){
-            printf("Vous n'avez pas respecter l'intervalle \n");
-            valeur = better_scan_int("Entrez la valeur que vous voulez entre -5 et 15\n");
-        }
-        // demande la quantite
-        quantite =  better_scan_int("Entrez la quantite que vous voulez pour cette valeur \n");
-        while(quantite +compteur > 150 || quantite < 1 || quantite > 15){
-            printf("Erreur de saisie respectant les normes \n");
-            quantite = better_scan_int("Entrez la quantite que vous voulez pour cette valeur en respectant la limite max et l'intervalle -5 et 15 !!! \n");          
-        }
-        for(int j =0; j< quantite; j++){
-            d[compteur]= valeur;
-            compteur++;
+    int* doublons = malloc(150 * sizeof(int)); 
+    int taille = 0;
+    int reponse = 1; // 1 si doublon, 0 sinon
+    int a;
+
+    printf("Création du paquet de cartes personnalisé avec 150 cartes imposées\n");
+
+    while (compteur != 150) {
+        valeur = better_scan_int("Entrez la valeur que vous voulez entre -5 et 15\n");
+
+        // Vérifie l'intervalle
+        while (valeur < -5 || valeur > 15) {
+            printf("Vous n'avez pas respecté l'intervalle [-5, 15]\n");
+            valeur = better_scan_int("Entrez une valeur correcte entre -5 et 15\n");
         }
 
+        // Vérifie si c’est un doublon
+        reponse = 0;
+        a = 0;
+        while (a < taille) {
+            if (doublons[a] == valeur) {
+                reponse = 1;
+            }
+            a++;
+        }
+
+        while (reponse == 1) {
+            printf("Cette valeur a déjà été saisie !\n");
+            valeur = better_scan_int("Entrez une nouvelle valeur entre -5 et 15\n");
+
+            while (valeur < -5 || valeur > 15) {
+                printf("Vous n'avez pas respecté l'intervalle [-5, 15]\n");
+                valeur = better_scan_int("Entrez une valeur correcte entre -5 et 15\n");
+            }
+
+            // Vérifie à nouveau les doublons
+            reponse = 0;
+            a = 0;
+            while (a < taille) {
+                if (doublons[a] == valeur) {
+                    reponse = 1;
+                }
+                a++;
+            }
+        }
+
+        // Ajoute la valeur dans le tableau de doublons
+        doublons[taille] = valeur;
+        taille++;
+
+        // Demande de la quantité
+        quantite = better_scan_int("Entrez la quantité que vous voulez pour cette valeur (1 à 15)\n");
+
+        while (quantite < 1 || quantite > 15 || compteur + quantite > 150) {
+            printf("Quantité invalide ou dépasse le total autorisé de 150 cartes\n");
+            quantite = better_scan_int("Entrez une quantité correcte (1-15, sans dépasser 150 au total)\n");
+        }
+
+        // Ajout au deck
+        for (int j = 0; j < quantite; j++) {
+            d[compteur] = valeur;
+            compteur++;
+        }
     }
+
+    free(doublons);
     return d;
 }
+
 
 // Mélange en place un tableau de 150 cartes
 void shuffle(int* d) {
@@ -85,7 +135,7 @@ Player build_player(int nomb_cards, int *deck,int *start){ //deck: le paquet de 
     printf("\n\n");
 }*/
 void display_card(Player p, int end) { // affiche joliment un paquet de cartes d’un joueur
-    printf("🧑 Player Card Display: %s\n\n", p.name);
+    printf(" Player Card Display: %s\n\n", p.name);
 
     // Ligne 1 : Indices
     for (int i = 0; i < end; i++) {
@@ -134,7 +184,7 @@ void display_card(Player p, int end) { // affiche joliment un paquet de cartes d
     }
 }*/
 void display_discard(Player p) { // affiche la défausse du joueur joliment
-    printf("🗑️  Player Discard Display: %s\n\n", p.name);
+    printf(" Player Discard Display: %s\n\n", p.name);
 
     // Ligne 1 : Titre centré
     printf("     Discard     \n");

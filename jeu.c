@@ -75,9 +75,9 @@ Party build_players(int *pile_size){ // initialise une party. pile_size: taille 
 
 void draw_pile_display(Party p, int *pile_size) { // affichage de la pioche joliment
     if (*pile_size <= 0) {
-        printf("🃏 Draw pile is empty!\n\n");
+        printf(" Draw pile is empty!\n\n");
     } else {
-        printf("🃏 Draw Pile (top card):\n\n");
+        printf(" Draw Pile (top card):\n\n");
 
         // Haut de la carte
         printf("    _______    \n");
