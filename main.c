@@ -4,7 +4,7 @@ int main(){
     srand(time(NULL));
     Party p1;
     int pile_size =0;
-    int end = 0;
+    int end = 100;
     p1 = build_players(&pile_size);
     printf("The game begins!\n");
     while(end == 100){
