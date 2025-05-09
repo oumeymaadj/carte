@@ -1,31 +1,30 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
-#include<time.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+#include <string.h>
 
+typedef struct {
+    int valeur; // valeur de la carte
+    int visible; // 0 = carte cachée, 1 = carte visible
+} Carte;
 
-typedef struct{
-    int value; //valeur de la carte 
-    int seeable; //valeur visible de la carte (si = 0 la carte est cachée, si 1=visible)
-}Card;
-
-typedef struct{
-    char *name; //essayer de faire un tab dynamique
-    Card *cards; //tab dynamique pour savoir cbm de cartes on met dedans
-    int nb_cards; //nombre de cartes
-    Card discard; //tab avec les cartes défaussées
+typedef struct {
+    char *nom; // nom du joueur (chaîne dynamique)
+    Carte *cartes; // tableau dynamique de cartes
+    int nb_cartes; // nombre de cartes
+    Carte defausse; // carte défaussée
     int score; // score
-}Player;
+} Joueur;
 
+int meilleure_saisie_entier(const char *message);
+void meilleure_saisie_chaine(const char *message, char *tampon, int taille_tampon);
+int* creer_paquet(int p[150]);
+void melanger(int* p);
+Joueur creer_joueur(int nb_cartes, int *paquet, int *depart);
+void afficher_cartes(Joueur j, int fin);
+void afficher_defausse(Joueur j);
 
-int better_scan_int(const char *message);
-void better_scan_str(const char *message, char *buffer, int buffer_size);
-int* deck(int d[150]);
-void shuffle(int* d);
-Player build_player(int nomb_cards, int *deck, int *start);
-void display_card(Player p, int end);
-void display_discard(Player p);
 
 
 
