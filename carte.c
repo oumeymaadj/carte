@@ -1,7 +1,5 @@
 #include"carte.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 
 int* deck(int d[150]) {
     int compteur = 0;
@@ -59,9 +57,11 @@ int* deck(int d[150]) {
 
         // Demande de la quantité
         quantite = better_scan_int("Entrez la quantité que vous voulez pour cette valeur (1 à 15)\n");
+        printf("Il vous reste %d cartes a entree \n",150 -(quantite+compteur));
 
         while (quantite < 1 || quantite > 15 || compteur + quantite > 150) {
             printf("Quantité invalide ou dépasse le total autorisé de 150 cartes\n");
+            printf("Il vous reste %d cartes a entree \n",150 -(quantite+compteur));
             quantite = better_scan_int("Entrez une quantité correcte (1-15, sans dépasser 150 au total)\n");
         }
 
@@ -94,18 +94,18 @@ Player build_player(int nomb_cards, int *deck,int *start){ //deck: le paquet de 
     Player p;
     int j =0; // indice du paquet du joueurs;
     char n[100];
-    better_scan_str("Type your name (50 characters max): ", n, 51); // 51 = 50 + '\0'
+    better_scan_str("Entrez votre pseudo (50 caracteres max): ", n, 51); // 51 = 50 + '\0'
     p.name = malloc(sizeof(char)*strlen(n) +1 );// +1 pour /0
     if(p.name == NULL){
-        printf("No dynamic space found available \n"); //on quitte le programme
+        printf("erreur allocation dynamique \n"); //on quitte le programme
         exit(1);
     }
     strcpy(p.name, n); // mettre le nom dans la le joueur 
-    printf("Welcome, %s!\n", p.name);
+    printf("Bienvenue, %s!\n", p.name);
     p.nb_cards = nomb_cards;
     p.cards = malloc(sizeof(Card)*p.nb_cards);
     if (p.cards == NULL) {
-        printf("Memory allocation failed for cards.\n");
+        printf("erreur allocation dynamique \n");
         exit(2);
     }
     for(int i= *start; i<p.nb_cards+ *start;i++){
@@ -135,7 +135,7 @@ Player build_player(int nomb_cards, int *deck,int *start){ //deck: le paquet de 
     printf("\n\n");
 }*/
 void display_card(Player p, int end) { // affiche joliment un paquet de cartes d’un joueur
-    printf(" Player Card Display: %s\n\n", p.name);
+    printf(" Cartes du joueur: %s\n\n", p.name);
 
     // Ligne 1 : Indices
     for (int i = 0; i < end; i++) {
@@ -149,18 +149,31 @@ void display_card(Player p, int end) { // affiche joliment un paquet de cartes d
     }
     printf("\n");
 
-    // Ligne 3 : Valeur
+    // Ligne 3 : Visuel vide
     for (int i = 0; i < end; i++) {
-        if (p.cards[i].seeable == 1)
-            printf(" |  %3d  |  ", p.cards[i].value);
-        else
-            printf(" |  ??   |  ");
+        printf(" |       |  ");
     }
     printf("\n");
 
-    // Ligne 4 : Visuel vide
+    // Ligne 4 : Valeur
     for (int i = 0; i < end; i++) {
-        printf(" |       |  ");
+        if (p.cards[i].seeable == 1){
+            if(p.cards[i].value >= -5 && p.cards[i].value <= 0 ){
+                printf(VERT " |  %3d  |  " FIN_COULEUR, p.cards[i].value);
+            }
+            else if(p.cards[i].value >= 1 && p.cards[i].value <= 5 ){
+                printf(BLEU " |  %3d  |  " FIN_COULEUR, p.cards[i].value);
+            }
+            else if(p.cards[i].value >= 6 && p.cards[i].value <= 10 ){
+                printf(JAUNE " |  %3d  |  " FIN_COULEUR, p.cards[i].value);
+            }
+            else if(p.cards[i].value >= 11 && p.cards[i].value <= 15 ){
+                printf(ROUGE " |  %3d  |  " FIN_COULEUR, p.cards[i].value);
+            }
+        }
+        else{
+            printf(" |  ??   |  ");
+        }
     }
     printf("\n");
 
@@ -170,6 +183,7 @@ void display_card(Player p, int end) { // affiche joliment un paquet de cartes d
     }
     printf("\n\n");
 }
+
 
 
 
@@ -184,27 +198,37 @@ void display_card(Player p, int end) { // affiche joliment un paquet de cartes d
     }
 }*/
 void display_discard(Player p) { // affiche la défausse du joueur joliment
-    printf(" Player Discard Display: %s\n\n", p.name);
+    printf(" Défausse du joueur: %s\n\n", p.name);
 
     // Ligne 1 : Titre centré
-    printf("     Discard     \n");
+    printf("     Défausse    \n");
 
     // Ligne 2 : Haut de la carte
-    printf("    _______    \n");
+    printf("  _______   \n");
 
-    // Ligne 3 : Valeur visible ou cachée
+    // Ligne 3 : Vide
+    printf(" |       |  \n");
+
+    // Ligne 4 : Valeur visible ou cachée
     if (p.discard.seeable == 1) {
-        printf("   |  %3d  |   \n", p.discard.value);
+        if(p.discard.value >= -5 && p.discard.value <= 0 ){
+            printf(VERT " |  %3d  |  " FIN_COULEUR, p.discard.value);
+        }
+        else if(p.discard.value >= 1 && p.discard.value <= 5 ){
+            printf(BLEU " |  %3d  |  " FIN_COULEUR, p.discard.value);
+        }
+        else if(p.discard.value >= 6 && p.discard.value <= 10 ){
+            printf(JAUNE " |  %3d  |  " FIN_COULEUR, p.discard.value);
+        }
+        else if(p.discard.value >= 11 && p.discard.value <= 15 ){
+            printf(ROUGE " |  %3d  |  " FIN_COULEUR, p.discard.value);
+        }
     } else {
-        printf("   |  ??   |   \n");
+        printf(" |  ??   |  ");
     }
-
-    // Ligne 4 : Vide
-    printf("   |       |   \n");
-
+    printf("\n");
     // Ligne 5 : Bas
-    printf("   |_______|   \n\n");
+    printf(" |_______|  \n\n");
 }
-
 
 
