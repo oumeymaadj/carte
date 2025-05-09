@@ -1,210 +1,166 @@
-#include"carte.h"
+#include "carte.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-int* deck(int d[150]) {
+int* paquet(int p[150]) {
     int compteur = 0;
     int valeur;
     int quantite;
-    int* doublons = malloc(150 * sizeof(int)); 
+    int* valeurs_utilisées = malloc(150 * sizeof(int)); 
     int taille = 0;
-    int reponse = 1; // 1 si doublon, 0 sinon
-    int a;
+    int doublon = 1; // 1 si doublon, 0 sinon
+    int i;
 
     printf("Création du paquet de cartes personnalisé avec 150 cartes imposées\n");
 
     while (compteur != 150) {
-        valeur = better_scan_int("Entrez la valeur que vous voulez entre -5 et 15\n");
+        valeur = meilleure_saisie_entier("Entrez la valeur que vous voulez entre -5 et 15\n");
 
-        // Vérifie l'intervalle
         while (valeur < -5 || valeur > 15) {
             printf("Vous n'avez pas respecté l'intervalle [-5, 15]\n");
-            valeur = better_scan_int("Entrez une valeur correcte entre -5 et 15\n");
+            valeur = meilleure_saisie_entier("Entrez une valeur correcte entre -5 et 15\n");
         }
 
-        // Vérifie si c’est un doublon
-        reponse = 0;
-        a = 0;
-        while (a < taille) {
-            if (doublons[a] == valeur) {
-                reponse = 1;
+        doublon = 0;
+        i = 0;
+        while (i < taille) {
+            if (valeurs_utilisées[i] == valeur) {
+                doublon = 1;
             }
-            a++;
+            i++;
         }
 
-        while (reponse == 1) {
+        while (doublon == 1) {
             printf("Cette valeur a déjà été saisie !\n");
-            valeur = better_scan_int("Entrez une nouvelle valeur entre -5 et 15\n");
+            valeur = meilleure_saisie_entier("Entrez une nouvelle valeur entre -5 et 15\n");
 
             while (valeur < -5 || valeur > 15) {
                 printf("Vous n'avez pas respecté l'intervalle [-5, 15]\n");
-                valeur = better_scan_int("Entrez une valeur correcte entre -5 et 15\n");
+                valeur = meilleure_saisie_entier("Entrez une valeur correcte entre -5 et 15\n");
             }
 
-            // Vérifie à nouveau les doublons
-            reponse = 0;
-            a = 0;
-            while (a < taille) {
-                if (doublons[a] == valeur) {
-                    reponse = 1;
+            doublon = 0;
+            i = 0;
+            while (i < taille) {
+                if (valeurs_utilisées[i] == valeur) {
+                    doublon = 1;
                 }
-                a++;
+                i++;
             }
         }
 
-        // Ajoute la valeur dans le tableau de doublons
-        doublons[taille] = valeur;
+        valeurs_utilisées[taille] = valeur;
         taille++;
 
-        // Demande de la quantité
-        quantite = better_scan_int("Entrez la quantité que vous voulez pour cette valeur (1 à 15)\n");
+        quantite = meilleure_saisie_entier("Entrez la quantité que vous voulez pour cette valeur (1 à 15)\n");
 
         while (quantite < 1 || quantite > 15 || compteur + quantite > 150) {
             printf("Quantité invalide ou dépasse le total autorisé de 150 cartes\n");
-            quantite = better_scan_int("Entrez une quantité correcte (1-15, sans dépasser 150 au total)\n");
+            quantite = meilleure_saisie_entier("Entrez une quantité correcte (1-15, sans dépasser 150 au total)\n");
         }
 
-        // Ajout au deck
         for (int j = 0; j < quantite; j++) {
-            d[compteur] = valeur;
+            p[compteur] = valeur;
             compteur++;
         }
     }
 
-    free(doublons);
-    return d;
+    free(valeurs_utilisées);
+    return p;
 }
 
-
-// Mélange en place un tableau de 150 cartes
-void shuffle(int* d) {
+void melanger(int* paquet) {
     for (int i = 149; i > 0; i--) {
-        int j = rand() % (i + 1); // indice aléatoire entre 0 et i
-        // Échange les valeurs d[i] et d[j]
-        int temp = d[i];
-        d[i] = d[j];
-        d[j] = temp;
+        int j = rand() % (i + 1);
+        int temp = paquet[i];
+        paquet[i] = paquet[j];
+        paquet[j] = temp;
     }
 }
 
+Joueur construire_joueur(int nb_cartes, int *paquet, int *debut) {
+    Joueur joueur;
+    int indice = 0;
+    char nom_temp[100];
+    meilleure_saisie_chaine("Entrez votre nom (50 caractères max) : ", nom_temp, 51);
 
-
-Player build_player(int nomb_cards, int *deck,int *start){ //deck: le paquet de cartes , start: pointeur qui contient l'indice d'ou on commence a prendre les cartes en gros on a un paquet de cartes et on distribut les cartes dans l'ordre, ex: le premier a les cartes de 1 a 15 le deuxieme de 15 a 30 du coup start c'est le pointeur de l'indice du debut
-    Player p;
-    int j =0; // indice du paquet du joueurs;
-    char n[100];
-    better_scan_str("Type your name (50 characters max): ", n, 51); // 51 = 50 + '\0'
-    p.name = malloc(sizeof(char)*strlen(n) +1 );// +1 pour /0
-    if(p.name == NULL){
-        printf("No dynamic space found available \n"); //on quitte le programme
+    joueur.nom = malloc(sizeof(char) * strlen(nom_temp) + 1);
+    if (joueur.nom == NULL) {
+        printf("Aucun espace mémoire disponible\n");
         exit(1);
     }
-    strcpy(p.name, n); // mettre le nom dans la le joueur 
-    printf("Welcome, %s!\n", p.name);
-    p.nb_cards = nomb_cards;
-    p.cards = malloc(sizeof(Card)*p.nb_cards);
-    if (p.cards == NULL) {
-        printf("Memory allocation failed for cards.\n");
+    strcpy(joueur.nom, nom_temp);
+    printf("Bienvenue, %s !\n", joueur.nom);
+
+    joueur.nb_cartes = nb_cartes;
+    joueur.cartes = malloc(sizeof(Carte) * joueur.nb_cartes);
+    if (joueur.cartes == NULL) {
+        printf("Échec de l'allocation mémoire pour les cartes.\n");
         exit(2);
     }
-    for(int i= *start; i<p.nb_cards+ *start;i++){
-        p.cards[j].value = deck[i]; // distribution des cartes 
-        p.cards[j].seeable = 0; // mettre toute les cartes invisible
-        j++;
 
+    for (int i = *debut; i < joueur.nb_cartes + *debut; i++) {
+        joueur.cartes[indice].valeur = paquet[i];
+        joueur.cartes[indice].visible = 0;
+        indice++;
     }
-    *start += p.nb_cards; // avancement du premier indice pour le prochain joueur
-    p.discard.value = 0;
-    p.discard.seeable = 0;
-    p.score = 0;
-    return p;
-    
+
+    *debut += joueur.nb_cartes;
+    joueur.defausse.valeur = 0;
+    joueur.defausse.visible = 0;
+    joueur.score = 0;
+    return joueur;
 }
 
-/*void display_card(Player p, int end){ // affuiche un paquet de carte d'un joueur 
-    printf("Player Card Display: %s \n", p.name);
-    for(int i= 0;i< end ;i++){
-        if(p.cards[i].seeable == 1){
-            printf("(%d)  [%d] ",i,p.cards[i].value); //affiche l'indice aussi
-        }
-        else{
-            printf("(%d)  [??] ",i); //affiche l'indice aussi
-        }
-    }
-    printf("\n\n");
-}*/
-void display_card(Player p, int end) { // affiche joliment un paquet de cartes d’un joueur
-    printf(" Player Card Display: %s\n\n", p.name);
+void afficher_cartes(Joueur joueur, int fin) {
+    printf(" Affichage des cartes du joueur : %s\n\n", joueur.nom);
 
-    // Ligne 1 : Indices
-    for (int i = 0; i < end; i++) {
+    for (int i = 0; i < fin; i++) {
         printf("   (%2d)     ", i);
     }
     printf("\n");
 
-    // Ligne 2 : Haut des cartes
-    for (int i = 0; i < end; i++) {
+    for (int i = 0; i < fin; i++) {
         printf("  _______   ");
     }
     printf("\n");
 
-    // Ligne 3 : Valeur
-    for (int i = 0; i < end; i++) {
-        if (p.cards[i].seeable == 1)
-            printf(" |  %3d  |  ", p.cards[i].value);
+    for (int i = 0; i < fin; i++) {
+        if (joueur.cartes[i].visible == 1)
+            printf(" |  %3d  |  ", joueur.cartes[i].valeur);
         else
             printf(" |  ??   |  ");
     }
     printf("\n");
 
-    // Ligne 4 : Visuel vide
-    for (int i = 0; i < end; i++) {
+    for (int i = 0; i < fin; i++) {
         printf(" |       |  ");
     }
     printf("\n");
 
-    // Ligne 5 : Bas des cartes
-    for (int i = 0; i < end; i++) {
+    for (int i = 0; i < fin; i++) {
         printf(" |_______|  ");
     }
     printf("\n\n");
 }
 
+void afficher_defausse(Joueur joueur) {
+    printf(" Affichage de la défausse du joueur : %s\n\n", joueur.nom);
 
-
-
-/*void display_discard(Player p){ // affiche la defausse du joueurs   
-    printf("Player Discard Display: %s \n", p.name);
-    if(p.discard.seeable == 1){
-        printf("Discard: [%d] \n",p.discard.value);
-    }
-    else{
-        printf("Discard: [??] \n");
-    }
-}*/
-void display_discard(Player p) { // affiche la défausse du joueur joliment
-    printf(" Player Discard Display: %s\n\n", p.name);
-
-    // Ligne 1 : Titre centré
-    printf("     Discard     \n");
-
-    // Ligne 2 : Haut de la carte
+    printf("     Défausse     \n");
     printf("    _______    \n");
 
-    // Ligne 3 : Valeur visible ou cachée
-    if (p.discard.seeable == 1) {
-        printf("   |  %3d  |   \n", p.discard.value);
+    if (joueur.defausse.visible == 1) {
+        printf("   |  %3d  |   \n", joueur.defausse.valeur);
     } else {
         printf("   |  ??   |   \n");
     }
 
-    // Ligne 4 : Vide
     printf("   |       |   \n");
-
-    // Ligne 5 : Bas
     printf("   |_______|   \n\n");
 }
+
 
 
 
