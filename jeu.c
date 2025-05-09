@@ -1,265 +1,182 @@
 #include "jeu.h"
 
-int nb_players(){ // fonction pour le nombre de joueur
+int nb_joueurs() { // fonction pour le nombre de joueurs
     int a;
-    a = better_scan_int("Enter the number of players in the game between 2 and 8 \n");
-    while(a>8 || a<2 ){
-        printf("start over you entered the wrong number \n");
-        a = better_scan_int("Enter the number of players in the game between 2 and 8: ");
+    a = meilleure_saisie_entier("Entrez le nombre de joueurs dans la partie entre 2 et 8 \n");
+    while (a > 8 || a < 2) {
+        printf("Recommencez, vous avez entré un nombre invalide \n");
+        a = meilleure_saisie_entier("Entrez le nombre de joueurs dans la partie entre 2 et 8 : ");
     }
     return a;
 }
 
-int nombre_cards() { // fonction pour le nombre de cartes par joueur
+int nombre_cartes() { // fonction pour le nombre de cartes par joueur
     int a;
-    a = (rand()%5) + 6; // carte entre 6 et 10
-    printf("il y aura %d cartes par joueurs", a);
+    a = (rand() % 5) + 6; // cartes entre 6 et 10
+    printf("Il y aura %d cartes par joueur\n", a);
     return a;
 }
 
+Partie creer_joueurs(int *taille_pioche) { // initialise une partie. taille_pioche : taille de la pioche initialisée à 0.
+    Partie partie;
+    int nb_cartes;
+    int depart = 0;
 
-Party build_players(int *pile_size){ // initialise une party. pile_size: taille de la pioche initaliser a 0.
-    Party p; // une partie 
-    int nomb_cards;//nb cartes
-    int start = 0;
-
-    int *d;// paquet de carte non melangee ensuite seras melanger
-    d = malloc(sizeof(int)* 150);
-    if(d == NULL){
-        printf("No dynamic space found available\n"); //on quitte le programme
+    int *paquet;
+    paquet = malloc(sizeof(int) * 150);
+    if (paquet == NULL) {
+        printf("Espace mémoire dynamique non disponible\n");
         exit(1);
     }
-    
-    p.nb_players = nb_players(); // nombre de joueurs
-    nomb_cards = nombre_cards(); // nombre de cartes
 
-    //melange les cartes
-    deck(d);
-    shuffle(d); // paquet de cartes melangé
+    partie.nb_joueurs = nb_joueurs(); // nombre de joueurs
+    nb_cartes = nombre_cartes(); // nombre de cartes
 
-    // cree les joueurs
-    p.players = malloc(sizeof(Player)* p.nb_players);
-    if(p.players == NULL){
-        printf("No dynamic space found available \n"); //on quitte le programme
+    // création et mélange du paquet
+    creer_paquet(paquet);
+    melanger(paquet);
+
+    // création des joueurs
+    partie.joueurs = malloc(sizeof(Joueur) * partie.nb_joueurs);
+    if (partie.joueurs == NULL) {
+        printf("Espace mémoire dynamique non disponible\n");
         exit(1);
     }
-    p.pile = malloc(sizeof(Card) * 150); // 150 parce que  deck a 150 cartes
-    if (p.pile == NULL) {
-        printf("Memory allocation failed for pile.\n");
+
+    partie.pioche = malloc(sizeof(Carte) * 150);
+    if (partie.pioche == NULL) {
+        printf("Échec de l'allocation mémoire pour la pioche.\n");
         exit(1);
     }
-    for(int i =0; i<p.nb_players; i++){
-        p.players[i] = build_player(nomb_cards, d,&start);
+
+    for (int i = 0; i < partie.nb_joueurs; i++) {
+        partie.joueurs[i] = creer_joueur(nb_cartes, paquet, &depart);
     }
 
-    p.size_pile = 150 - (p.nb_players * nomb_cards);
-    
-    for(int i= start; i<150;i++){
-        p.pile[*pile_size].value = d[i]; // distribution des cartes 
-        p.pile[*pile_size].seeable = 0; // tout cachée
-        (*pile_size) ++;
-    }
-    return p;
+    partie.taille_pioche = 150 - (partie.nb_joueurs * nb_cartes);
 
+    for (int i = depart; i < 150; i++) {
+        partie.pioche[*taille_pioche].valeur = paquet[i];
+        partie.pioche[*taille_pioche].visible = 0;
+        (*taille_pioche)++;
+    }
+
+    return partie;
 }
 
-/*void draw_pile_display(Party p, int * pile_size ){ // affichage de la pioche
-    if (*pile_size <= 0) {
-        printf("Draw pile is empty!\n");
-    }
-    else{
-        printf("Draw pile: [%d] (%d cards remaining)\n", p.pile[*pile_size - 1].value, *pile_size);
-    }
-    
-}*/
-
-void draw_pile_display(Party p, int *pile_size) { // affichage de la pioche joliment
-    if (*pile_size <= 0) {
-        printf(" Draw pile is empty!\n\n");
+void afficher_pioche(Partie partie, int *taille_pioche) {
+    if (*taille_pioche <= 0) {
+        printf(" La pioche est vide !\n\n");
     } else {
-        printf(" Draw Pile (top card):\n\n");
-
-        // Haut de la carte
+        printf(" Carte au sommet de la pioche :\n\n");
         printf("    _______    \n");
-
-        // Valeur visible de la carte du dessus
-        printf("   |  %3d  |   \n", p.pile[*pile_size - 1].value);
-
-        // Ligne graphique vide
+        printf("   |  %3d  |   \n", partie.pioche[*taille_pioche - 1].valeur);
         printf("   |       |   \n");
-
-        // Bas de la carte
         printf("   |_______|   \n");
-
-        // Nombre de cartes restantes
-        printf("  (%d cards remaining)\n\n", *pile_size);
+        printf("  (%d cartes restantes)\n\n", *taille_pioche);
     }
 }
 
+void afficher_partie(Partie *partie, int *taille_pioche, int i) {
+    int choix1, choix2, choix3, choix4, var;
 
-
-
-void display_party(Party *p , int *pile_size, int i ){ // que la party commence! i -> c'est l'indice du joueur, turn_index -> l'indice du tour pour la pioche
-    int choice1; // choix1 entre piocher ou prendre de la defausse  
-    int choice2; // choix2 -> choix entre echanger une carte avec l'une de ses cartes ou refuser et la deposer dans la defausse 
-    int choice3; // choix3 -> choix de la defausse de la personne 
-    int choice4; // choix4 = i l'indice de la carte du joueur qu'il veut echanger 
-    int var; // variable secondaire juste afin dechanger les cartes entre la defausse et la pioche
-    
-    //affiche les joueurs
-
-    for(int j=0;j< p->nb_players; j++ ){
-        display_card(p->players[j],p->players[j].nb_cards);
-        display_discard(p->players[j]);
+    for (int j = 0; j < partie->nb_joueurs; j++) {
+        afficher_cartes(partie->joueurs[j], partie->joueurs[j].nb_cartes);
+        afficher_defausse(partie->joueurs[j]);
     }
 
-    // choix entre pioche ou defausse
-
-    printf("If you want to draw a card, enter 1, otherwise if you want to take a card from the discard pile, enter 2 \n");
-    choice1 = better_scan_int(""); // lecture du choix de l'utilisateur
-    while (choice1 != 1 && choice1 != 2) { 
-        printf("false please start again. If you want to draw a card, enter 1, otherwise if you want to take a card from the discard pile, enter 2 \n");
-        choice1 = better_scan_int("");
+    printf("Tapez 1 pour piocher une carte, ou 2 pour prendre une carte depuis une défausse\n");
+    choix1 = meilleure_saisie_entier("");
+    while (choix1 != 1 && choix1 != 2) {
+        printf("Erreur. Tapez 1 pour piocher une carte, ou 2 pour prendre une carte depuis une défausse\n");
+        choix1 = meilleure_saisie_entier("");
     }
-    if(choice1 == 1){// si il a choisit de piocher une carte
-        if(*pile_size <=0){
-            printf("Draw pile is empty. Turn skipped \n");// si la pioche est vide
+
+    if (choix1 == 1) {
+        if (*taille_pioche <= 0) {
+            printf("La pioche est vide. Tour passé.\n");
             return;
         }
-        draw_pile_display(*p,pile_size); // affichage de la valeur si elle est visible
-        (*pile_size)--; // j'avance dans la pioche
 
-        printf("Now enter 1 if you want to exchange your card with one of your cards, or enter 2 if you refuse the card and want to place it in your discard pile. \n");
-        choice2 = better_scan_int("");
-        while (choice2 != 1 && choice2 != 2) {
-            printf("False, please start again.\n");
-            printf("Now enter 1 if you want to exchange your card with one of your cards, or enter 2 if you refuse the card and want to place it in your discard pile. \n");
-            choice2 = better_scan_int("");
-        }    
+        afficher_pioche(*partie, taille_pioche);
+        (*taille_pioche)--;
 
-        if(choice2 == 2){ // si il refuse la carte et veut la mettre dans la defausse 
-            p->players[i].discard.value = p->pile[*pile_size].value; // i le joueur
-            p->pile[*pile_size].seeable = 1;
+        printf("Tapez 1 pour échanger cette carte avec l'une des vôtres, ou 2 pour la refuser et la mettre dans votre défausse.\n");
+        choix2 = meilleure_saisie_entier("");
+        while (choix2 != 1 && choix2 != 2) {
+            printf("Erreur. Tapez 1 pour échanger ou 2 pour refuser.\n");
+            choix2 = meilleure_saisie_entier("");
         }
-        else if(choice2 == 1){// si c'est le choix 1 c'est a dire si il veut l'echanger avec l'une de ses cartes perso
-            printf("Enter the index of the card you want to exchange (0-%d) : \n ", p->players[i].nb_cards-1);
-            choice4 = better_scan_int(""); // je récupère l'indice de la carte qu'il veut échanger
-            while (choice4 < 0 || choice4 >= p->players[i].nb_cards) {
-                printf("The index is not valid, please try again. Enter the index of the card you want to exchange.\n ");
-                choice4 = better_scan_int("");
+
+        if (choix2 == 2) {
+            partie->joueurs[i].defausse.valeur = partie->pioche[*taille_pioche].valeur;
+            partie->pioche[*taille_pioche].visible = 1;
+        } else {
+            printf("Entrez l'indice de la carte à échanger (0-%d) :\n", partie->joueurs[i].nb_cartes - 1);
+            choix4 = meilleure_saisie_entier("");
+            while (choix4 < 0 || choix4 >= partie->joueurs[i].nb_cartes) {
+                printf("Indice invalide, essayez encore.\n");
+                choix4 = meilleure_saisie_entier("");
             }
-            
-            var = p->players[i].cards[choice4].value ; // variable intermediaire
-            p->players[i].cards[choice4].value = p->pile[*pile_size].value; // echangerles cartes, la cartes de la pioche a la place de la carte perso 
-            p->players[i].cards[choice4].seeable = 1;
-            p->players[i].discard.value = var;
-            p->players[i].discard.seeable = 1;
+
+            var = partie->joueurs[i].cartes[choix4].valeur;
+            partie->joueurs[i].cartes[choix4].valeur = partie->pioche[*taille_pioche].valeur;
+            partie->joueurs[i].cartes[choix4].visible = 1;
+            partie->joueurs[i].defausse.valeur = var;
+            partie->joueurs[i].defausse.visible = 1;
         }
+    } else if (choix1 == 2) {
+        printf("Choisissez une défausse d’un joueur (entre 0 et %d) :\n", partie->nb_joueurs - 1);
+        choix3 = meilleure_saisie_entier("");
+        while (choix3 < 0 || choix3 >= partie->nb_joueurs || partie->joueurs[choix3].defausse.visible == 0) {
+            printf("Erreur. Choisissez une défausse valide (entre 0 et %d) :\n", partie->nb_joueurs - 1);
+            choix3 = meilleure_saisie_entier("");
+        }
+
+        printf("Entrez l'indice de la carte à échanger (entre 0 et %d) :\n", partie->joueurs[i].nb_cartes - 1);
+        choix4 = meilleure_saisie_entier("");
+        while (choix4 < 0 || choix4 >= partie->joueurs[i].nb_cartes) {
+            printf("Indice invalide, essayez encore.\n");
+            choix4 = meilleure_saisie_entier("");
+        }
+
+        var = partie->joueurs[choix3].defausse.valeur;
+        partie->joueurs[i].defausse.valeur = partie->joueurs[i].cartes[choix4].valeur;
+        partie->joueurs[i].defausse.visible = 1;
+        partie->joueurs[i].cartes[choix4].valeur = var;
+        partie->joueurs[i].cartes[choix4].visible = 1;
+        partie->joueurs[choix3].defausse.visible = 0;
     }
 
-    else if(choice1 == 2){// prendre une carte d'une des defausse la sienne ou un autre
-        printf("Choose a player's discard pile (enter a number between 0 and %d):\n", p->nb_players - 1); // choisis la défausse de quel joueur il veut prendre
-        choice3 = better_scan_int("");
-        while (choice3 < 0 || choice3 >= p->nb_players || p->players[choice3].discard.seeable ==0) { // à remplir : vérifier qu'il a bien choisi un joueur
-            printf("False, please start again. Choose a player's discard pile (enter a number between 0 and %d):\n", p->nb_players - 1);
-            choice3 = better_scan_int("");
-        }
-
-        printf("Enter the index of the card you want to exchange (between 0 and %d):\n", p->players[i].nb_cards - 1); // échange avec l'une de ses cartes visibles et la carte échangée va sur la défausse
-        choice4 = better_scan_int(""); // je récupère l'indice de la carte qu'il veut échanger
-        while (choice4 < 0 || choice4 >= p->players[i].nb_cards) {
-            printf("The index is not valid, please try again. Enter the index of the card you want to exchange (between 0 and %d):\n", p->players[i].nb_cards - 1);
-            choice4 = better_scan_int("");
-        }
-        var = p->players[choice3].discard.value;
-        p->players[i].discard.value = p->players[i].cards[choice4].value;
-        p->players[i].discard.seeable = 1;
-        p->players[i].cards[choice4].value = var;
-        p->players[i].cards[choice4].seeable = 1;
-        p->players[choice3].discard.seeable =0;
-
-    }
-    // Affichage du joueur qui vient de jiuer 
-    printf("\nEnd of %s's turn.\n", p->players[i].name);
+    printf("\nFin du tour de %s.\n", partie->joueurs[i].nom);
     printf("-----------------------------\n\n");
 }
 
-void free_party(Party p){
-    // Libérer les joueurs
-    for (int i = 0; i < p.nb_players; i++) {
-        free(p.players[i].cards); // Libérer les cartes du joueur
-        free(p.players[i].name);  // Libérer le nom du joueur
+void liberer_partie(Partie partie) {
+    for (int i = 0; i < partie.nb_joueurs; i++) {
+        free(partie.joueurs[i].cartes);
+        free(partie.joueurs[i].nom);
     }
-    free(p.players); // Libérer le tableau de joueurs
-    // Libérer la pioche
-    free(p.pile);
+    free(partie.joueurs);
+    free(partie.pioche);
 }
 
-int endgame(Party p, int pile_size){ // qui detecte la fin de la partie elle renvoie l'indice du joueur qui a finis la partie sinon elle renvoie 100
+int fin_partie(Partie partie, int taille_pioche) {
     int cpt;
-    if(pile_size <= 0){
-        printf("There is no more draw pile, the game is over \n");
+    if (taille_pioche <= 0) {
+        printf("Il n'y a plus de pioche, la partie est terminée\n");
         return 100;
     }
-    for(int i=0; i< p.nb_players; i++){
+    for (int i = 0; i < partie.nb_joueurs; i++) {
         cpt = 0;
-        for(int j=0; j<p.players[i].nb_cards;j++){
-            if(p.players[i].cards[j].seeable == 1){
-                cpt ++;
-            }         
-        }
-        if(cpt == p.players[i].nb_cards){
-            printf("%s has all his cards visible one more turn and the game is over \n", p.players[i].name);
-            return i;
-        } 
-    }
-    return 100;
-}
-
-void scores(Party p) { // Affiche le(s) joueur(s) avec le meilleur score
-    int max = 1000000;          // score minimum flemme de changer la variable 
-    int i_max = 0;              // index d’un des gagnants
-    int tab[10] = {0};          // indices des gagnants (si égalité) au pire des cas 8 joeurs sont egaux mais j'ai mis 10 au cas ou
-    int indice = 0;             // compteur du tableau
-
-    for (int i = 0; i < p.nb_players; i++) {
-        p.players[i].score = 0;
-        for (int j = 0; j < p.players[i].nb_cards; j++) {
-            if (p.players[i].cards[j].seeable == 1) {
-                p.players[i].score += p.players[i].cards[j].value;
+        for (int j = 0; j < partie.joueurs[i].nb_cartes; j++) {
+            if (partie.joueurs[i].cartes[j].visible == 1) {
+                cpt++;
             }
         }
-
-        if (p.players[i].score < max) {
-            max = p.players[i].score;
-            i_max =i;
-            indice =0;
-            tab[indice] = i;
-            indice ++;
-        } 
-        else if(p.players[i].score == max){
-            tab[indice] = i;
-            indice ++;
+        if (cpt == partie.joueurs[i].nb_cartes) {
+            printf("%s a toutes ses cartes visibles, encore un tour et la partie est terminée\n", partie.joueurs[i].nom);
+            return i;
         }
     }
-
-    // Affichage des gagnants
-    if (indice == 1) {
-        printf("\n The winner is: %s with %d points!\n", p.players[i_max].name, max);
-    } 
-    else {
-        printf("\n It's a tie between: ");
-        for (int i = 0; i < indice; i++) {
-            printf("%s \n", p.players[tab[i]].name);
-        }
-        printf("\nAll with a score of: %d points\n", max);
-    }
-
-    // Affichage de tous les scores
-    printf("\n Final scores:\n");
-    for (int i = 0; i < p.nb_players; i++) {
-        printf("- %s : %d points\n", p.players[i].name, p.players[i].score);
-    }
-}
-
-
+    return
