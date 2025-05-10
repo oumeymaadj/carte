@@ -1,0 +1,18 @@
+Bonjour, bienvenue dans notre jornal de bord, vous trouverez un compte rendu dans les grandes lignes de l'avancée du projet.
+
+11 avril :
+  Première réunion en groupe sur le projet, sépratation du code en différentes fonctions. Création des fonctions pour créer le deck, le mélanger et créer les joueurs ainsi que des différents .h dont nous aurons besoin.
+
+Vacances :
+  Beaucoup d'avancées grâce à Oumeyma sur les fonctions permettant d'afficher la pioche, la défausse ainsi que les cartes du joueur (carte.c globalement fini).
+
+Semaine de la rentrée & séance du 2 mai : 
+  Avancées durant la semaine par Oumeyma et travail d'équipe en séance entre Antoine et Ethan, fonctions permettant de gérer le déroulé du jeu globalement finies (jeu.c & main.c presque finis).
+
+8 mai :
+  Création des fonctions améliorées pour le scanf d'entier et de char. 
+
+9 mai :
+  Séance en présentiel, Ethan s'est occupé de la partie du makefile ainsi que de la traduction de certaines variables et a rendu le code plus lisible. Oumeyma et Antoine s'occupent quant à eux de règlages de différents bug ainsi que de l'affichage en couleur des cartes. 
+  Problème rencontré au niveau des conditions de fin de partie où le programme tourne une fois de plus que nécessaire, mais trop complexe à régler aussi proche de l'échéance.
+  Abandon du projet d'affichage graphique car trop long à mettre en place & à maitriser aussi proche de l'échéance.
