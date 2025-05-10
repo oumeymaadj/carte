@@ -122,18 +122,7 @@ Player build_player(int nomb_cards, int *deck,int *start){ //deck: le paquet de 
     
 }
 
-/*void display_card(Player p, int end){ // affuiche un paquet de carte d'un joueur 
-    printf("Player Card Display: %s \n", p.name);
-    for(int i= 0;i< end ;i++){
-        if(p.cards[i].seeable == 1){
-            printf("(%d)  [%d] ",i,p.cards[i].value); //affiche l'indice aussi
-        }
-        else{
-            printf("(%d)  [??] ",i); //affiche l'indice aussi
-        }
-    }
-    printf("\n\n");
-}*/
+
 void display_card(Player p, int end) { // affiche joliment un paquet de cartes d’un joueur
     printf(" Cartes du joueur: %s\n\n", p.name);
 
@@ -186,17 +175,6 @@ void display_card(Player p, int end) { // affiche joliment un paquet de cartes d
 
 
 
-
-
-/*void display_discard(Player p){ // affiche la defausse du joueurs   
-    printf("Player Discard Display: %s \n", p.name);
-    if(p.discard.seeable == 1){
-        printf("Discard: [%d] \n",p.discard.value);
-    }
-    else{
-        printf("Discard: [??] \n");
-    }
-}*/
 void display_discard(Player p) { // affiche la défausse du joueur joliment
     printf(" Défausse du joueur: %s\n\n", p.name);
 

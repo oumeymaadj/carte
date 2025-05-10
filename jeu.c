@@ -59,19 +59,15 @@ Party build_players(int *pile_size){ // initialise une party. pile_size: taille 
         p.pile[*pile_size].seeable = 0; // tout cachée
         (*pile_size) ++;
     }
+
+    if (p.nb_players * nomb_cards + *pile_size != 150) {
+    printf("Erreur : incohérence du nombre total de cartes.\n");
+    exit(15);
+    }
     return p;
 
 }
 
-/*void draw_pile_display(Party p, int * pile_size ){ // affichage de la pioche
-    if (*pile_size <= 0) {
-        printf("Draw pile is empty!\n");
-    }
-    else{
-        printf("Draw pile: [%d] (%d cards remaining)\n", p.pile[*pile_size - 1].value, *pile_size);
-    }
-    
-}*/
 
 void draw_pile_display(Party p, int *pile_size) { // affichage de la pioche joliment
     if (*pile_size <= 0) {
@@ -117,6 +113,7 @@ void display_party(Party *p , int *pile_size, int i ){ // que la party commence!
     int choice3; // choix3 -> choix de la defausse de la personne 
     int choice4; // choix4 = i l'indice de la carte du joueur qu'il veut echanger 
     int var; // variable secondaire juste afin dechanger les cartes entre la defausse et la pioche
+    int visible = 0; // variable pour verifier si il y a au moins une defausse visible
     
     //affiche les joueurs
 
@@ -170,6 +167,19 @@ void display_party(Party *p , int *pile_size, int i ){ // que la party commence!
     }
 
     else if(choice1 == 2){// prendre une carte d'une des defausse la sienne ou un autre
+
+        // verifier si une defausse est visible au moins
+        for (int j = 0; j < p->nb_players; j++) {
+            if (p->players[j].discard.seeable == 1) {
+                visible = 1;
+                break;
+            }
+        }
+        if (visible == 0) {
+            printf("Aucune défausse visible, vous êtes obligé de piocher.\n");
+            return; //return a la place de exit pour seulement arreter la partie du joueur et pas arreter totalement le code
+        }
+
         printf("Choisissez la défausse d'un joueur  (entrez un nombre entre 0 et %d):\n", p->nb_players - 1); // choisis la défausse de quel joueur il veut prendre
         choice3 = better_scan_int("");
         while (choice3 < 0 || choice3 >= p->nb_players || p->players[choice3].discard.seeable ==0) { // à remplir : vérifier qu'il a bien choisi un joueur
@@ -184,17 +194,17 @@ void display_party(Party *p , int *pile_size, int i ){ // que la party commence!
             choice4 = better_scan_int("");
         }
         var = p->players[choice3].discard.value;
-        p->players[i].discard.value = p->players[i].cards[choice4].value;
-        p->players[i].discard.seeable = 1;
+        p->players[choice3].discard.value = p->players[i].cards[choice4].value;
+        p->players[choice3].discard.seeable =1;
         p->players[i].cards[choice4].value = var;
         p->players[i].cards[choice4].seeable = 1;
-        p->players[choice3].discard.seeable =0;
-
+        printf("%s a pris la carte de la défausse de %s et lui a rendu une carte.\n", p->players[i].name, p->players[choice3].name);   
     }
     // Affichage du joueur qui vient de jiuer 
     printf("\nFin du tour de %s.\n", p->players[i].name);
     printf("-----------------------------\n\n\n\n\n");
 }
+
 
 void free_party(Party p){
     // Libérer les joueurs

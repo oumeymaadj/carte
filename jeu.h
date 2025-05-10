@@ -7,6 +7,8 @@ typedef struct{
     int size_pile; //taille de la pioche  
 }Party;
 
+void sauvegardePartie(Party p);
+void chargerPartie(Party *p);
 int nb_players();
 int nombre_cards();
 Party build_players(int *pile_size);
@@ -15,3 +17,4 @@ void display_party(Party *p , int *pile_size, int i );
 void free_party(Party p);
 int endgame(Party p, int pile_size);
 void scores(Party p);
+

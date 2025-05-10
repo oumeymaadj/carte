@@ -20,7 +20,7 @@ typedef struct{
     char *name; //essayer de faire un tab dynamique
     Card *cards; //tab dynamique pour savoir cbm de cartes on met dedans
     int nb_cards; //nombre de cartes
-    Card discard; //tab avec les cartes défaussées
+    Card discard; //cartes défaussées
     int score; // score
 }Player;
 
