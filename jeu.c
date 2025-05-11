@@ -18,7 +18,7 @@ int nombre_cartes() { // fonction pour le nombre de cartes par joueur
 }
 
 
-Partie construire_joueur(int *taille_pile){ // initialise une Partie. taille_pile: taille de la pioche initialisée a 0.
+Partie initialiser_partie(int *taille_pile){ // initialise une Partie. taille_pile: taille de la pioche initialisée a 0.
     Partie p; // une partie 
     int nomb_cartes;//nb cartes
     int commencer = 0;
@@ -118,8 +118,8 @@ void affichage_partie(Partie *p , int *taille_pile, int i ){ // que la Partie co
     //affiche les joueurs
 
     for(int j=0;j< p->nb_joueur; j++ ){
-        display_Carte(p->joueur[j],p->joueur[j].nb_cartes);
-        display_defausse(p->joueur[j]);
+        affichage_Carte(p->joueur[j],p->joueur[j].nb_cartes);
+        affichage_defausse(p->joueur[j]);
     }
 
     // choix entre pioche ou defausse
