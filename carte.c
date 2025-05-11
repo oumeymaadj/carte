@@ -103,14 +103,14 @@ Joueur construire_joueur(int nombre_cartes, int *paquet,int *commencer){ //paque
     strcpy(p.nom, n); //copie le contenu de la chaîne n (le pseudo entré par l'utilisateur) dans p.nom
     printf("Bienvenue, %s!\n", p.nom);
     p.nb_cartes = nombre_cartes;
-    p.Cartes = malloc(sizeof(Carte)*p.nb_cartes);
-    if (p.Cartes == NULL) {
+    p.cartes = malloc(sizeof(Carte)*p.nb_cartes);
+    if (p.cartes == NULL) {
         printf("erreur allocation dynamique \n");
         exit(2);
     }
     for(int i= *commencer; i<p.nb_cartes+ *commencer;i++){
-        p.Cartes[j].valeur = paquet[i]; // distribution des cartes 
-        p.Cartes[j].visible = 0; // mettre toute les cartes invisible
+        p.cartes[j].valeur = paquet[i]; // distribution des cartes 
+        p.cartes[j].visible = 0; // mettre toute les cartes invisible
         j++;
 
     }
@@ -124,7 +124,7 @@ Joueur construire_joueur(int nombre_cartes, int *paquet,int *commencer){ //paque
 
 
 void affichage_Carte(Joueur p, int fin) { // affiche joliment un paquet de cartes d’un joueur
-    printf(" Cartes du joueur: %s\n\n", p.nom);
+    printf(" cartes du joueur: %s\n\n", p.nom);
 
     // Ligne 1 : Indices
     for (int i = 0; i < fin; i++) {
@@ -146,18 +146,18 @@ void affichage_Carte(Joueur p, int fin) { // affiche joliment un paquet de carte
 
     // Ligne 4 : Valeur
     for (int i = 0; i < fin; i++) {
-        if (p.Cartes[i].visible == 1){
-            if(p.Cartes[i].valeur >= -5 && p.Cartes[i].valeur <= 0 ){
-                printf(VERT " |  %3d  |  " FIN_COULEUR, p.Cartes[i].valeur);
+        if (p.cartes[i].visible == 1){
+            if(p.cartes[i].valeur >= -5 && p.cartes[i].valeur <= 0 ){
+                printf(VERT " |  %3d  |  " FIN_COULEUR, p.cartes[i].valeur);
             }
-            else if(p.Cartes[i].valeur >= 1 && p.Cartes[i].valeur <= 5 ){
-                printf(BLEU " |  %3d  |  " FIN_COULEUR, p.Cartes[i].valeur);
+            else if(p.cartes[i].valeur >= 1 && p.cartes[i].valeur <= 5 ){
+                printf(BLEU " |  %3d  |  " FIN_COULEUR, p.cartes[i].valeur);
             }
-            else if(p.Cartes[i].valeur >= 6 && p.Cartes[i].valeur <= 10 ){
-                printf(JAUNE " |  %3d  |  " FIN_COULEUR, p.Cartes[i].valeur);
+            else if(p.cartes[i].valeur >= 6 && p.cartes[i].valeur <= 10 ){
+                printf(JAUNE " |  %3d  |  " FIN_COULEUR, p.cartes[i].valeur);
             }
-            else if(p.Cartes[i].valeur >= 11 && p.Cartes[i].valeur <= 15 ){
-                printf(ROUGE " |  %3d  |  " FIN_COULEUR, p.Cartes[i].valeur);
+            else if(p.cartes[i].valeur >= 11 && p.cartes[i].valeur <= 15 ){
+                printf(ROUGE " |  %3d  |  " FIN_COULEUR, p.cartes[i].valeur);
             }
         }
         else{
