@@ -1,20 +1,20 @@
 #include "carte.h"
 
 typedef struct{
-    Player * players; //joueurs maximum 8 et minimum 2
-    int nb_players; //nombre de joueurs
+    Joueur * joueur; //joueurs maximum 8 et minimum 2
+    int nb_joueur; //nombre de joueurs
     Card * pile; // pioche
-    int size_pile; //taille de la pioche  
-}Party;
+    int taille_pile; //taille de la pioche  
+}Partie;
 
-void sauvegardePartie(Party p);
-void chargerPartie(Party *p);
-int nb_players();
-int nombre_cards();
-Party build_players(int *pile_size);
-void draw_pile_display(Party p, int * pile_size );
-void display_party(Party *p , int *pile_size, int i );
-void free_party(Party p);
-int endgame(Party p, int pile_size);
-void scores(Party p);
+void sauvegardePartie(Partie p);
+void chargerPartie(Partie *p);
+int nb_joueur();
+int nombre_carte();
+Partie construire_joueur(int *pile_size);
+void affichage_pile(Partie p, int * pile_size );
+void affichage_partie(Partie *p , int *pile_size, int i );
+void free_Partie(Partie p);
+int fin_partie(Partie p, int pile_size);
+void scores(Partie p);
 
