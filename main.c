@@ -14,7 +14,7 @@ int main(){
     choix = better_scan_int("Votre choix : \n");
 
     while(choix !=1 && choix!=2){
-        printf("Erreur veuillez entrez 1 ou 2 seulement (1 pour une nouvelle partie 2 pour charger une ancienne partie) \n");
+        printf("Erreur veuillez entrez 1 ou 2 seulement (1 pour une nouvelle partie / 2 pour charger une ancienne partie) \n");
         choix = better_scan_int("Votre choix : \n");
     }
     if(choix == 2){
@@ -41,11 +41,6 @@ int main(){
         if(choix2 == 1){
             sauvegardePartie(p1);
         }
-
-    }
-
-    if (end != 100) {
-    printf("\n%s a toutes ses cartes visibles, tous les joueurs jouent un autre tour et la partie se termine.\n", p1.players[end].name);
     }
 
     for(int index_player=0; index_player<p1.nb_players; index_player++){ // je refais un tour de jeux sans la personne qui a finis le jeux
