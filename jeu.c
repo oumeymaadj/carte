@@ -118,7 +118,7 @@ void affichage_partie(Partie *p , int *taille_pile, int i ){ // que la Partie co
     //affiche les joueurs
 
     for(int j=0;j< p->nb_joueur; j++ ){
-        display_Carte(p->joueur[j],p->joueur[j].nb_Cartes);
+        display_Carte(p->joueur[j],p->joueur[j].nb_cartes);
         display_defausse(p->joueur[j]);
     }
 
@@ -151,16 +151,16 @@ void affichage_partie(Partie *p , int *taille_pile, int i ){ // que la Partie co
             p->pile[*taille_pile].visible = 1;
         }
         else if(choix_2 == 1){// si c'est le choix 1 c'est a dire si il veut l'echanger avec l'une de ses cartes perso
-            printf("Entrez l'indice de la carte que vous voulez échanger (0-%d) : \n ", p->joueur[i].nb_Cartes-1);
+            printf("Entrez l'indice de la carte que vous voulez échanger (0-%d) : \n ", p->joueur[i].nb_cartes-1);
             choix_4 = better_scan_int(""); // je récupère l'indice de la carte qu'il veut échanger
-            while (choix_4 < 0 || choix_4 >= p->joueur[i].nb_Cartes) {
+            while (choix_4 < 0 || choix_4 >= p->joueur[i].nb_cartes) {
                 printf("Indice invalide, recommencez. Entrez l'indice de la carte que vous voulez échanger.\n ");
                 choix_4 = better_scan_int("");
             }
             
-            var = p->joueur[i].Cartes[choix_4].valeur ; // variable intermediaire
-            p->joueur[i].Cartes[choix_4].valeur = p->pile[*taille_pile].valeur; // echanger les cartes, la carte de la pioche a la place de la carte perso 
-            p->joueur[i].Cartes[choix_4].visible = 1;
+            var = p->joueur[i].cartes[choix_4].valeur ; // variable intermediaire
+            p->joueur[i].cartes[choix_4].valeur = p->pile[*taille_pile].valeur; // echanger les cartes, la carte de la pioche a la place de la carte perso 
+            p->joueur[i].cartes[choix_4].visible = 1;
             p->joueur[i].defausse.valeur = var;
             p->joueur[i].defausse.visible = 1;
         }
@@ -187,17 +187,17 @@ void affichage_partie(Partie *p , int *taille_pile, int i ){ // que la Partie co
             choix_3 = better_scan_int("");
         }
 
-        printf("Entrez l'indice de la carte que vous voulez échanger (entre 0 et %d):\n", p->joueur[i].nb_Cartes - 1); // échange avec l'une de ses cartes visibles et la carte échangée va sur la défausse
+        printf("Entrez l'indice de la carte que vous voulez échanger (entre 0 et %d):\n", p->joueur[i].nb_cartes - 1); // échange avec l'une de ses cartes visibles et la carte échangée va sur la défausse
         choix_4 = better_scan_int(""); // je récupère l'indice de la carte qu'il veut échanger
-        while (choix_4 < 0 || choix_4 >= p->joueur[i].nb_Cartes) {
-            printf("Indice invalide, recommencez. Entrez l'indice de la carte que vous voulez échanger (entre 0 et %d):\n", p->joueur[i].nb_Cartes - 1);
+        while (choix_4 < 0 || choix_4 >= p->joueur[i].nb_cartes) {
+            printf("Indice invalide, recommencez. Entrez l'indice de la carte que vous voulez échanger (entre 0 et %d):\n", p->joueur[i].nb_cartes - 1);
             choix_4 = better_scan_int("");
         }
         var = p->joueur[choix_3].defausse.valeur;
-        p->joueur[choix_3].defausse.valeur = p->joueur[i].Cartes[choix_4].valeur;
+        p->joueur[choix_3].defausse.valeur = p->joueur[i].cartes[choix_4].valeur;
         p->joueur[choix_3].defausse.visible =1;
-        p->joueur[i].Cartes[choix_4].valeur = var;
-        p->joueur[i].Cartes[choix_4].visible = 1;
+        p->joueur[i].cartes[choix_4].valeur = var;
+        p->joueur[i].cartes[choix_4].visible = 1;
         printf("%s a pris la carte de la défausse de %s et lui a rendu une carte.\n", p->joueur[i].nom, p->joueur[choix_3].nom);   
     }
     // Affichage du joueur qui vient de jiuer 
@@ -209,7 +209,7 @@ void affichage_partie(Partie *p , int *taille_pile, int i ){ // que la Partie co
 void free_Partie(Partie p){
     // Libérer les joueurs
     for (int i = 0; i < p.nb_joueur; i++) {
-        free(p.joueur[i].Cartes); // Libérer les cartes du joueur
+        free(p.joueur[i].cartes); // Libérer les cartes du joueur
         free(p.joueur[i].nom);  // Libérer le nom du joueur
     }
     free(p.joueur); // Libérer le tableau de joueurs
@@ -225,12 +225,12 @@ int fin_partie(Partie p, int taille_pile){ // qui detecte la fin de la partie el
     }
     for(int i=0; i< p.nb_joueur; i++){
         cpt = 0;
-        for(int j=0; j<p.joueur[i].nb_Cartes;j++){
-            if(p.joueur[i].Cartes[j].visible == 1){
+        for(int j=0; j<p.joueur[i].nb_cartes;j++){
+            if(p.joueur[i].cartes[j].visible == 1){
                 cpt ++;
             }         
         }
-        if(cpt == p.joueur[i].nb_Cartes){
+        if(cpt == p.joueur[i].nb_cartes){
             printf("%s a toutes ses cartes visibles, tous les joueurs jouent un autre tour et la partie se termine \n", p.joueur[i].nom);
             return i;
         } 
@@ -246,9 +246,9 @@ void scores(Partie p) { // Affiche le(s) joueur(s) avec le meilleur score
 
     for (int i = 0; i < p.nb_joueur; i++) {
         p.joueur[i].score = 0;
-        for (int j = 0; j < p.joueur[i].nb_Cartes; j++) {
-            if (p.joueur[i].Cartes[j].visible == 1) {
-                p.joueur[i].score += p.joueur[i].Cartes[j].valeur;
+        for (int j = 0; j < p.joueur[i].nb_cartes; j++) {
+            if (p.joueur[i].cartes[j].visible == 1) {
+                p.joueur[i].score += p.joueur[i].cartes[j].valeur;
             }
         }
 
