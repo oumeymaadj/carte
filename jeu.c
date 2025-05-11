@@ -18,7 +18,7 @@ int nombre_cards() { // fonction pour le nombre de cartes par joueur
 }
 
 
-Party build_players(int *pile_size){ // initialise une party. pile_size: taille de la pioche initaliser a 0.
+Party build_players(int *pile_size){ // initialise une party. pile_size: taille de la pioche initialisée a 0.
     Party p; // une partie 
     int nomb_cards;//nb cartes
     int start = 0;
