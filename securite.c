@@ -21,7 +21,7 @@ void better_scan_str(const char *message, char *buffer, int taille_buffer) {
         printf("%s", message);
         if (fgets(buffer, taille_buffer, stdin) != NULL) {
             // Supprimer le saut de ligne s’il est présent
-            taille_t len = strlen(buffer);
+            size_t len = strlen(buffer);
             if (len > 0 && buffer[len - 1] == '\n') {
                 buffer[len - 1] = '\0';
             } else {
