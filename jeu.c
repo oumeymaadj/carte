@@ -23,7 +23,7 @@ Party build_players(int *pile_size){ // initialise une party. pile_size: taille 
     int nomb_cards;//nb cartes
     int start = 0;
 
-    int *d;// paquet de carte non melangee ensuite seras melanger
+    int *d;// paquet de carte non melangé ensuite sera melangé
     d = malloc(sizeof(int)* 150);
     if(d == NULL){
         printf("erreur allocation dynamique\n"); //on quitte le programme
@@ -43,7 +43,7 @@ Party build_players(int *pile_size){ // initialise une party. pile_size: taille 
         printf("erreur allocation dynamique \n"); //on quitte le programme
         exit(1);
     }
-    p.pile = malloc(sizeof(Card) * 150); // 150 parce que  deck a 150 cartes
+    p.pile = malloc(sizeof(Card) * 150); // 150 parce que le deck a 150 cartes
     if (p.pile == NULL) {
         printf("erreur allocation dynamique\n");
         exit(1);
@@ -56,7 +56,7 @@ Party build_players(int *pile_size){ // initialise une party. pile_size: taille 
     
     for(int i= start; i<150;i++){
         p.pile[*pile_size].value = d[i]; // distribution des cartes 
-        p.pile[*pile_size].seeable = 0; // tout cachée
+        p.pile[*pile_size].seeable = 0; // tout caché
         (*pile_size) ++;
     }
 
@@ -130,7 +130,7 @@ void display_party(Party *p , int *pile_size, int i ){ // que la party commence!
         printf("Fausse entrée. Entrez 1 si vous voulez piocher, sinon entrez 2 \n");
         choice1 = better_scan_int("");
     }
-    if(choice1 == 1){// si il a choisit de piocher une carte
+    if(choice1 == 1){// si il a choisi de piocher une carte
         if(*pile_size <=0){
             printf("La pioche est vide, on saute votre tour \n");// si la pioche est vide
             return;
@@ -138,11 +138,11 @@ void display_party(Party *p , int *pile_size, int i ){ // que la party commence!
         draw_pile_display(*p,pile_size); // affichage de la valeur si elle est visible
         (*pile_size)--; // j'avance dans la pioche
 
-        printf("Entrez 1 si vous voulez échanger cette carte avec l'une des votres ou si vous la défaussez. \n");
+        printf("Entrez 1 si vous voulez échanger cette carte avec l'une des votres ou 2 si vous la défaussez. \n");
         choice2 = better_scan_int("");
         while (choice2 != 1 && choice2 != 2) {
             printf("Fausse entrée, recommencez.\n");
-            printf("Entrez 1 si vous voulez échanger cette carte avec l'une des votres ou si vous la défaussez. \n");
+            printf("Entrez 1 si vous voulez échanger cette carte avec l'une des votres ou 2 si vous la défaussez. \n");
             choice2 = better_scan_int("");
         }    
 
@@ -159,14 +159,14 @@ void display_party(Party *p , int *pile_size, int i ){ // que la party commence!
             }
             
             var = p->players[i].cards[choice4].value ; // variable intermediaire
-            p->players[i].cards[choice4].value = p->pile[*pile_size].value; // echangerles cartes, la cartes de la pioche a la place de la carte perso 
+            p->players[i].cards[choice4].value = p->pile[*pile_size].value; // echanger les cartes, la carte de la pioche a la place de la carte perso 
             p->players[i].cards[choice4].seeable = 1;
             p->players[i].discard.value = var;
             p->players[i].discard.seeable = 1;
         }
     }
 
-    else if(choice1 == 2){// prendre une carte d'une des defausse la sienne ou un autre
+    else if(choice1 == 2){// prendre une carte d'une des defausses la sienne ou un autre
 
         // verifier si une defausse est visible au moins
         for (int j = 0; j < p->nb_players; j++) {
@@ -180,7 +180,7 @@ void display_party(Party *p , int *pile_size, int i ){ // que la party commence!
             return; //return a la place de exit pour seulement arreter la partie du joueur et pas arreter totalement le code
         }
 
-        printf("Choisissez la défausse d'un joueur  (entrez un nombre entre 0 et %d):\n", p->nb_players - 1); // choisis la défausse de quel joueur il veut prendre
+        printf("Choisissez la défausse d'un joueur  (entrez un nombre entre 0 et %d):\n", p->nb_players - 1); // choisi la défausse de quel joueur il veut prendre
         choice3 = better_scan_int("");
         while (choice3 < 0 || choice3 >= p->nb_players || p->players[choice3].discard.seeable ==0) { // à remplir : vérifier qu'il a bien choisi un joueur
             printf("Fausse entrée, recommencez. Choisissez la défausse d'un joueur  (entrez un nombre entre 0 et %d):\n", p->nb_players - 1);
@@ -217,7 +217,7 @@ void free_party(Party p){
     free(p.pile);
 }
 
-int endgame(Party p, int pile_size){ // qui detecte la fin de la partie elle renvoie l'indice du joueur qui a finis la partie sinon elle renvoie 100
+int endgame(Party p, int pile_size){ // qui detecte la fin de la partie elle renvoie l'indice du joueur qui a fini la partie sinon elle renvoie 100
     int cpt;
     if(pile_size <= 0){
         printf("La pioche est vide, fin du jeu. \n");
