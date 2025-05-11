@@ -8,15 +8,15 @@ void sauvegardePartie(Partie p){
         exit(4);
     }
     // Recupere le nombre de joueur
-    fprintf(fichier, "%d\n", p.nb_joueurs);
-    for(int i=0; i< p.nb_joueurs; i++){
+    fprintf(fichier, "%d\n", p.nb_joueur);
+    for(int i=0; i< p.nb_joueur; i++){
         //on recupere le nom et le nombre de carte par joueur
-        fprintf(fichier, "%s %d \n", p.joueurs[i].nom, p.joueurs[i].nb_cartes);
+        fprintf(fichier, "%s %d \n", p.joueur[i].nom, p.joueur[i].nb_cartes);
         // On recupere les veleurs des cartes et leurs visibilité
-        for(int j=0; j<p.joueurs[i].nb_cartes; j++){
-            fprintf(fichier, "%d %d\n", p.joueurs[i].cartes[j].valeur,p.joueurs[i].cartes[j].visible );
+        for(int j=0; j<p.joueur[i].nb_cartes; j++){
+            fprintf(fichier, "%d %d\n", p.joueur[i].cartes[j].valeur,p.joueur[i].cartes[j].visible );
         }
-        fprintf(fichier, "%d %d\n",p.joueurs[i].defausse.valeur, p.joueurs[i].defausse.visible );
+        fprintf(fichier, "%d %d\n",p.joueur[i].defausse.valeur, p.joueur[i].defausse.visible );
     }
     // taille de la pioche
     fprintf(fichier, "%d\n", p.taille_pile);
@@ -37,18 +37,18 @@ void chargerPartie(Partie *p) {
         exit(5);
     }
 
-    // Lire le nombre de joueurs
-    fscanf(fichier, "%d", &p->nb_joueurs);
+    // Lire le nombre de joueur
+    fscanf(fichier, "%d", &p->nb_joueur);
 
-    // Allouer le tableau de joueurs
-    p->joueurs = malloc(sizeof(Player) * p->nb_joueurs);
-    if (p->joueurs == NULL) {
-        printf("Erreur allocation mémoire joueurs\n");
+    // Allouer le tableau de joueur
+    p->joueur = malloc(sizeof(Joueur) * p->nb_joueur);
+    if (p->joueur == NULL) {
+        printf("Erreur allocation mémoire joueur\n");
         exit(6);
     }
 
     // Pour chaque joueur
-    for (int i = 0; i < p->nb_joueurs; i++) {
+    for (int i = 0; i < p->nb_joueur; i++) {
         char buffer[100]; // buffer temporaire pour le nom
         int nb_cartes;
 
@@ -56,19 +56,19 @@ void chargerPartie(Partie *p) {
         fscanf(fichier, "%s %d", buffer, &nb_cartes);
 
         // Allouer et copier le nom
-        p->joueurs[i].nom = malloc(strlen(buffer) + 1);
-        if (p->joueurs[i].nom == NULL) {
+        p->joueur[i].nom = malloc(strlen(buffer) + 1);
+        if (p->joueur[i].nom == NULL) {
             printf("Erreur allocation mémoire nom joueur\n");
             exit(7);
         }
-        strcpy(p->joueurs[i].nom, buffer);
+        strcpy(p->joueur[i].nom, buffer);
 
         // Stocker le nombre de cartes
-        p->joueurs[i].nb_cartes = nb_cartes;
+        p->joueur[i].nb_cartes = nb_cartes;
 
         // Allouer les cartes
-        p->joueurs[i].cartes = malloc(sizeof(Carte) * nb_cartes);
-        if (p->joueurs[i].cartes == NULL) {
+        p->joueur[i].cartes = malloc(sizeof(Carte) * nb_cartes);
+        if (p->joueur[i].cartes == NULL) {
             printf("Erreur allocation mémoire cartes joueur\n");
             exit(8);
         }
@@ -76,17 +76,17 @@ void chargerPartie(Partie *p) {
         // Lire les cartes du joueur
         for (int j = 0; j < nb_cartes; j++) {
             fscanf(fichier, "%d %d",
-                   &p->joueurs[i].cartes[j].valeur,
-                   &p->joueurs[i].cartes[j].visible);
+                   &p->joueur[i].cartes[j].valeur,
+                   &p->joueur[i].cartes[j].visible);
         }
 
         // Lire la défausse unique du joueur
         fscanf(fichier, "%d %d",
-               &p->joueurs[i].defausse.valeur,
-               &p->joueurs[i].defausse.visible);
+               &p->joueur[i].defausse.valeur,
+               &p->joueur[i].defausse.visible);
 
         // Initialiser le score à 0 (il sera recalculé si besoin)
-        p->joueurs[i].score = 0;
+        p->joueur[i].score = 0;
     }
 
     // Allouer la pioche
