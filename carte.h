@@ -12,26 +12,26 @@
 
 
 typedef struct{
-    int value; //valeur de la carte 
-    int seeable; //valeur visible de la carte (si = 0 la carte est cachée, si 1=visible)
+    int valeur; //valeur de la carte 
+    int visible; //valeur visible de la carte (si = 0 la carte est cachée, si 1=visible)
 }Card;
 
 typedef struct{
-    char *name; //nom du joueur
-    Card *cards; //tab avec les carte du joueur
-    int nb_cards; //nombre de cartes
-    Card discard; //cartes défaussées
+    char *nom; //nom du joueur
+    Card *Carte; //tab avec les carte du joueur
+    int nb_cartes; //nombre de cartes
+    Card defausse; //cartes défaussées
     int score; // score
-}Player;
+}Joueur;
 
 
 int better_scan_int(const char *message);
 void better_scan_str(const char *message, char *buffer, int buffer_size);
-int* deck(int d[150]);
-void shuffle(int* d);
-Player build_player(int nomb_cards, int *deck, int *start);
-void display_card(Player p, int end);
-void display_discard(Player p);
+int* paquet(int d[150]);
+void melanger(int* d);
+Player construire_joueur(int nombre_cartes, int *pquet, int *commencer);
+void affichage_Carte(Joueur p, int fin);
+void affichage_defausse(Joueur p);
 
 
 
