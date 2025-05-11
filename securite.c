@@ -15,11 +15,11 @@ int better_scan_int(const char *message) {
 }
 
 
-void better_scan_str(const char *message, char *buffer, int buffer_size) {
+void better_scan_str(const char *message, char *buffer, int taille_buffer) {
     int valid = 0;
     while (!valid) {
         printf("%s", message);
-        if (fgets(buffer, buffer_size, stdin) != NULL) {
+        if (fgets(buffer, taille_buffer, stdin) != NULL) {
             // Supprimer le saut de ligne s’il est présent
             size_t len = strlen(buffer);
             if (len > 0 && buffer[len - 1] == '\n') {
