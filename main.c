@@ -22,14 +22,14 @@ int main(){
         pile_size = p1.taille_pile;
     }
     else if(choix ==1){
-        p1 = construire_joueur(&pile_size);
+        p1 = initialiser_partie(&pile_size);
     }
 
     printf("La partie commence !\n");
 
     while(fin == 100){
-        for(int indice_joueur=0; indice_joueur<p1.nb_joueurs; indice_joueur++){
-            display_Partie(&p1, &pile_size, indice_joueur);
+        for(int indice_joueur=0; indice_joueur<p1.nb_joueur; indice_joueur++){
+            affichage_partie(&p1, &pile_size, indice_joueur);
         }
         fin = fin_partie(p1,pile_size);
 
@@ -43,9 +43,9 @@ int main(){
         }
     }
 
-    for(int indice_joueur=0; indice_joueur<p1.nb_joueurs; indice_joueur++){ // je refais un tour de jeux sans la personne qui a finis le jeux
+    for(int indice_joueur=0; indice_joueur<p1.nb_joueur; indice_joueur++){ // je refais un tour de jeux sans la personne qui a finis le jeux
         if(indice_joueur != fin){
-            display_Partie(&p1, &pile_size, indice_joueur);
+            affichage_partie(&p1, &pile_size, indice_joueur);
         }
     }
     
