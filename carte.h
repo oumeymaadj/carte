@@ -18,7 +18,7 @@ typedef struct{
 
 typedef struct{
     char *nom; //nom du joueur
-    Card *Carte; //tab avec les carte du joueur
+    Card *cartes; //tab avec les carte du joueur
     int nb_cartes; //nombre de cartes
     Card defausse; //cartes défaussées
     int score; // score
