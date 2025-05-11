@@ -100,7 +100,7 @@ Player build_player(int nomb_cards, int *deck,int *start){ //deck: le paquet de 
         printf("erreur allocation dynamique \n"); //on quitte le programme
         exit(1);
     }
-    strcpy(p.name, n); // mettre le nom dans la le joueur 
+    strcpy(p.name, n); //copie le contenu de la chaîne n (le pseudo entré par l'utilisateur) dans p.name
     printf("Bienvenue, %s!\n", p.name);
     p.nb_cards = nomb_cards;
     p.cards = malloc(sizeof(Card)*p.nb_cards);
