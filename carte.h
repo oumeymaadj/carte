@@ -17,8 +17,8 @@ typedef struct{
 }Card;
 
 typedef struct{
-    char *name; //essayer de faire un tab dynamique
-    Card *cards; //tab dynamique pour savoir cbm de cartes on met dedans
+    char *name; //nom du joueur
+    Card *cards; //tab avec les carte du joueur
     int nb_cards; //nombre de cartes
     Card discard; //cartes défaussées
     int score; // score
