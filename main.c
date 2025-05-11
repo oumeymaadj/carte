@@ -2,9 +2,9 @@
 
 int main(){
     srand(time(NULL));
-    Party p1;
+    Partie p1;
     int pile_size =0;
-    int end = 100;
+    int fin = 100;
     int choix;// choix pour savoir si il veux charger une partie our jouer normalement
     int choix2; // choix de sauvegarde ou non
 
@@ -19,19 +19,19 @@ int main(){
     }
     if(choix == 2){
         chargerPartie(&p1);
-        pile_size = p1.size_pile;
+        pile_size = p1.taille_pile;
     }
     else if(choix ==1){
-        p1 = build_players(&pile_size);
+        p1 = construire_joueur(&pile_size);
     }
 
     printf("La partie commence !\n");
 
-    while(end == 100){
-        for(int index_player=0; index_player<p1.nb_players; index_player++){
-            display_party(&p1, &pile_size, index_player);
+    while(fin == 100){
+        for(int indice_joueur=0; indice_joueur<p1.nb_joueurs; indice_joueur++){
+            display_Partie(&p1, &pile_size, indice_joueur);
         }
-        end = endgame(p1,pile_size);
+        fin = fin_partie(p1,pile_size);
 
         choix2= better_scan_int("Voulez-vous sauvegarder la partie ? (1 = Oui, 0 = Non) : \n");
         while(choix2 !=1 && choix2!=0){
@@ -43,15 +43,15 @@ int main(){
         }
     }
 
-    for(int index_player=0; index_player<p1.nb_players; index_player++){ // je refais un tour de jeux sans la personne qui a finis le jeux
-        if(index_player != end){
-            display_party(&p1, &pile_size, index_player);
+    for(int indice_joueur=0; indice_joueur<p1.nb_joueurs; indice_joueur++){ // je refais un tour de jeux sans la personne qui a finis le jeux
+        if(indice_joueur != fin){
+            display_Partie(&p1, &pile_size, indice_joueur);
         }
     }
     
     printf("\nFin de la partie ! Comptons les scores \n");
     scores(p1);
     printf("\nMerci d'avoir joué!\n");
-    free_party(p1);
+    free_Partie(p1);
     return 0;
 }
