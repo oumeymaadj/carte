@@ -1,29 +1,22 @@
-# Nom de l'exécutable attendu par le shell
-EXEC = wildwater
+all: exec
 
-# Compilateur
-CC = gcc
+jeu.o: jeu.c jeu.h 
+	gcc -c jeu.c -o jeu.o
+	
+carte.o: carte.c carte.h 
+	gcc -c carte.c -o carte.o
+	
+main.o: main.c 
+	gcc -c main.c -o main.o
+	
+securite.o: securite.c 
+	gcc -c securite.c -o securite.o
 
-# Options de compilation
-CFLAGS = -Wall -Wextra -g
+sauvegarde.o: sauvegarde.c 
+	gcc -c sauvegarde.c -o sauvegarde.o
 
-# Fichiers sources
-SRC = mainhisto.c histo.c fonction_base.c
+exec: jeu.o main.o securite.o carte.o sauvegarde.o
+	gcc jeu.o main.o securite.o carte.o sauvegarde.o -o exec
 
-# Fichiers objets
-OBJ = $(SRC:.c=.o)
-
-# Règle par défaut
-all: $(EXEC)
-
-# Création de l'exécutable
-$(EXEC): $(OBJ)
-	$(CC) $(CFLAGS) -o $(EXEC) $(OBJ)
-
-# Compilation des fichiers .c en .o
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-# Nettoyage
-clean:
-	rm -f $(OBJ) $(EXEC)
+clean : rm  -f *.o
+		rm exec
